@@ -250,7 +250,7 @@ export default function Home() {
               Brasil em 1997.
             </p>
             <p>
-              Com mais de 30 anos de experiência, já treinou mais de 1200
+              Com mais de 30 anos de experiência, já treinou mais de 1300
               profissionais brasileiros, preparou executivos para TOEFL e IELTS e
               conduziu workshops e consultorias para empresas como RE/MAX,
               Nestlé, IBM, EY, GE, Janssen, AstraZeneca, Sanofi, Roche, Trakto e
@@ -268,7 +268,7 @@ export default function Home() {
               <span className="stat-label">anos de experiência</span>
             </div>
             <div className="stat-card">
-              <span className="stat-number">+1200</span>
+              <span className="stat-number">+1300</span>
               <span className="stat-label">profissionais treinados</span>
             </div>
             <div className="stat-card">
