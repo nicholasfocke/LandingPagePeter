@@ -13,9 +13,6 @@ export default function Home() {
             <Link href="#about">About</Link>
             <Link href="#contact">Contact</Link>
           </nav>
-          <button className="menu-button" aria-label="Open menu">
-            <span />
-          </button>
         </header>
 
         <section className="hero" id="about">
@@ -34,8 +31,9 @@ export default function Home() {
               <Image
                 src="/images/peter.png"
                 alt="Peter Focke"
-                width={432}
-                height={560}
+                /* increased dimensions to make the portrait larger while keeping aspect ratio */
+                width={560}
+                height={725}
                 priority
               />
             </div>

@@ -9,7 +9,7 @@
   background-color: #ffffff;
   border-radius: 36px;
   box-shadow: 0 40px 80px rgba(15, 23, 42, 0.12);
-  max-width: 1080px;
+  max-width: 1500px;
   width: 100%;
   padding: 48px 56px 56px;
   display: flex;
@@ -47,48 +47,10 @@
   color: #0d1c3d;
 }
 
-.menu-button {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  border: 1px solid #e0e6f3;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, rgba(240, 244, 255, 0.9), rgba(223, 229, 249, 0.9));
-  box-shadow: 0 12px 24px rgba(8, 22, 60, 0.06);
-}
-
-.menu-button span {
-  display: block;
-  width: 18px;
-  height: 2px;
-  background-color: #0d1c3d;
-  position: relative;
-}
-
-.menu-button span::before,
-.menu-button span::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  width: 18px;
-  height: 2px;
-  background-color: #0d1c3d;
-}
-
-.menu-button span::before {
-  top: -6px;
-}
-
-.menu-button span::after {
-  top: 6px;
-}
-
 .hero {
   display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: 40px;
+  grid-template-columns: 0.95fr 1.05fr;
+  gap: 0px;
   align-items: center;
 }
 
@@ -147,6 +109,7 @@
   display: flex;
   justify-content: center;
   position: relative;
+  
 }
 
 .hero-image::before {
@@ -165,6 +128,10 @@
   border-radius: 24px;
   overflow: hidden;
   box-shadow: 0 32px 60px rgba(15, 23, 42, 0.22);
+  /* Allow the portrait container to grow; image itself already uses width:100% */
+  width: 100%;
+  max-width: 350px;
+  margin: 0 auto;
 }
 
 .hero-portrait img {
