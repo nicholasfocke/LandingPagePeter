@@ -1,20 +1,73 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useCallback } from "react";
+import type { MouseEvent } from "react";
 import "./page.css";
 
 export default function Home() {
+  const handleSmoothScroll = useCallback(
+    (event: MouseEvent<HTMLAnchorElement>, target: string) => {
+      event.preventDefault();
+
+      const element = document.querySelector(target);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+        window.history.pushState(null, "", target);
+      }
+    },
+    []
+  );
+
   return (
     <div className="page">
       <main className="card">
         <header className="navbar">
           <span className="brand">HPE</span>
           <nav className="nav-links">
-            <Link href="#home">Início</Link>
-            <Link href="#metodo">Método</Link>
-            <Link href="#servicos">Serviços</Link>
-            <Link href="#clientes">Clientes</Link>
-            <Link href="#testemunhos">Testemunhos</Link>
-            <Link href="#contato">Contato</Link>
+            <Link
+              href="#home"
+              scroll={false}
+              onClick={(event) => handleSmoothScroll(event, "#home")}
+            >
+              Início
+            </Link>
+            <Link
+              href="#metodo"
+              scroll={false}
+              onClick={(event) => handleSmoothScroll(event, "#metodo")}
+            >
+              Método
+            </Link>
+            <Link
+              href="#servicos"
+              scroll={false}
+              onClick={(event) => handleSmoothScroll(event, "#servicos")}
+            >
+              Serviços
+            </Link>
+            <Link
+              href="#clientes"
+              scroll={false}
+              onClick={(event) => handleSmoothScroll(event, "#clientes")}
+            >
+              Clientes
+            </Link>
+            <Link
+              href="#testemunhos"
+              scroll={false}
+              onClick={(event) => handleSmoothScroll(event, "#testemunhos")}
+            >
+              Testemunhos
+            </Link>
+            <Link
+              href="#contato"
+              scroll={false}
+              onClick={(event) => handleSmoothScroll(event, "#contato")}
+            >
+              Contato
+            </Link>
           </nav>
         </header>
 
@@ -35,7 +88,12 @@ export default function Home() {
               <div className="hero-highlight">Domine apresentações, reuniões e negociações em inglês</div>
             </div>
             <div className="hero-actions">
-              <Link className="hero-button" href="#contato">
+              <Link
+                className="hero-button"
+                href="https://api.whatsapp.com/send/?phone=5582999214182"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Fale com Peter
               </Link>
               <span className="hero-location">Atendendo líderes no Brasil e no exterior</span>
@@ -326,7 +384,12 @@ export default function Home() {
               plano sob medida para as suas metas profissionais.
             </p>
           </div>
-          <a className="contact-button" href="mailto:peter@hpe.com">
+          <a
+            className="contact-button"
+            href="https://api.whatsapp.com/send/?phone=5582999214182"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Fale com Peter
           </a>
         </section>
