@@ -13,6 +13,10 @@ body {
   font-family: "Poppins", Arial, Helvetica, sans-serif;
   background-color: #f4f6fb;
   color: #0d1c3d;
+}
+
+html,
+body {
   scroll-behavior: smooth;
 }
 
