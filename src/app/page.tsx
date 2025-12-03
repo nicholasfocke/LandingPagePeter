@@ -90,9 +90,9 @@ export default function Home() {
             <div className="hero-actions">
               <Link
                 className="hero-button"
-                href="#contato"
-                scroll={false}
-                onClick={(event) => handleSmoothScroll(event, "#contato")}
+                href="https://api.whatsapp.com/send/?phone=5582999214182"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 Fale com Peter
               </Link>
@@ -384,7 +384,12 @@ export default function Home() {
               plano sob medida para as suas metas profissionais.
             </p>
           </div>
-          <a className="contact-button" href="mailto:peter@hpe.com">
+          <a
+            className="contact-button"
+            href="https://api.whatsapp.com/send/?phone=5582999214182"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Fale com Peter
           </a>
         </section>
