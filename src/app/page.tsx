@@ -212,8 +212,21 @@ export default function Home() {
               Peter Focke.
             </p>
           </div>
+          <div className="services-highlight">
+            <p>
+              Agenda limitada, mentorias assinadas diretamente com Peter e
+              formatos híbridos para você ter impacto imediato em reuniões,
+              apresentações e negociações.
+            </p>
+            <div className="services-highlight-tags">
+              <span>Assinatura premium</span>
+              <span>Planos presenciais ou online</span>
+              <span>Resultados aplicáveis no dia seguinte</span>
+            </div>
+          </div>
           <div className="services-grid">
             <article className="service-card">
+              <span className="service-chip">Programa assinatura</span>
               <h3>Curso completo de Business English</h3>
               <p>
                 Desenvolvimento contínuo das habilidades essenciais: apresentações,
@@ -221,6 +234,7 @@ export default function Home() {
               </p>
             </article>
             <article className="service-card">
+              <span className="service-chip">Pista acelerada</span>
               <h3>Preparatórios TOEFL &amp; IELTS</h3>
               <p>
                 Plano de estudo orientado pelos resultados do seu diagnóstico para
@@ -228,6 +242,7 @@ export default function Home() {
               </p>
             </article>
             <article className="service-card">
+              <span className="service-chip">Turma imersiva</span>
               <h3>Imersão em Business English</h3>
               <p>
                 Quatro encontros intensivos em dois fins de semana (24 horas) para
@@ -236,6 +251,7 @@ export default function Home() {
               </p>
             </article>
             <article className="service-card">
+              <span className="service-chip">Mercado global</span>
               <h3>Vendas de imóveis em inglês</h3>
               <p>
                 Programa de 24 horas para corretores atuarem em transações
@@ -244,6 +260,7 @@ export default function Home() {
               </p>
             </article>
             <article className="service-card">
+              <span className="service-chip">Workshops táticos</span>
               <h3>Workshops de Business Skills</h3>
               <p>
                 Módulos de 4 ou 8 horas em grupos de até 12 participantes focados
@@ -251,6 +268,7 @@ export default function Home() {
               </p>
             </article>
             <article className="service-card">
+              <span className="service-chip">Consultoria VIP</span>
               <h3>VIP Consultoria</h3>
               <p>
                 Atendimento premium para empresas e executivos que precisam de um
