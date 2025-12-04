@@ -212,18 +212,6 @@ export default function Home() {
               Peter Focke.
             </p>
           </div>
-          <div className="services-highlight">
-            <p>
-              Agenda limitada, mentorias assinadas diretamente com Peter e
-              formatos híbridos para você ter impacto imediato em reuniões,
-              apresentações e negociações.
-            </p>
-            <div className="services-highlight-tags">
-              <span>Assinatura premium</span>
-              <span>Planos presenciais ou online</span>
-              <span>Resultados aplicáveis no dia seguinte</span>
-            </div>
-          </div>
           <div className="services-grid">
             <article className="service-card">
               <span className="service-chip">Programa assinatura</span>
@@ -246,15 +234,14 @@ export default function Home() {
               <h3>Imersão em Business English</h3>
               <p>
                 Quatro encontros intensivos em dois fins de semana (24 horas) para
-                acelerar sua fluência sem sair do país. Próxima turma: 22, 23, 29 e
-                30 de novembro.
+                acelerar sua fluência sem sair do país. 
               </p>
             </article>
             <article className="service-card">
               <span className="service-chip">Mercado global</span>
               <h3>Vendas de imóveis em inglês</h3>
               <p>
-                Programa de 24 horas para corretores atuarem em transações
+                2 módulos para corretores atuarem em transações
                 internacionais: vocabulário técnico, negociação e condução de
                 clientes estrangeiros.
               </p>
