@@ -682,16 +682,16 @@
     grid-template-columns: 1fr;
   }
 
-  .steps-grid .step-card:nth-child(2) {
+  .steps-grid .step-card {
     background: linear-gradient(150deg, #fdfbff, #e8edff);
     box-shadow: 0 26px 60px rgba(15, 23, 42, 0.18);
   }
 
-  .steps-grid .step-card:nth-child(2)::after {
+  .steps-grid .step-card::after {
     opacity: 1;
   }
 
-  .steps-grid .step-card:nth-child(2) .step-number {
+  .steps-grid .step-card .step-number {
     background: linear-gradient(135deg, #ffe498, #ffcc4d);
     color: #172853;
     box-shadow: 0 12px 28px rgba(255, 204, 77, 0.35);
