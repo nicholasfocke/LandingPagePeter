@@ -1,52 +1,3 @@
-.page {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  padding: 48px 16px 64px;
-}
-
-.card {
-  background-color: #ffffff;
-  border-radius: 36px;
-  box-shadow: 0 40px 80px rgba(15, 23, 42, 0.12);
-  max-width: 1500px;
-  width: 100%;
-  padding: 48px 56px 56px;
-  display: flex;
-  flex-direction: column;
-  gap: 48px;
-}
-
-.navbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.brand {
-  font-size: 26px;
-  font-weight: 700;
-  letter-spacing: 0.24em;
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-  font-size: 15px;
-  font-weight: 500;
-  color: #5c6885;
-}
-
-.nav-links a {
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.nav-links a:hover {
-  color: #0d1c3d;
-}
-
 .hero {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -614,11 +565,6 @@
 }
 
 @media (max-width: 1024px) {
-  .card {
-    padding: 40px 32px;
-    border-radius: 28px;
-  }
-
   .hero {
     grid-template-columns: 1fr;
   }
@@ -642,10 +588,6 @@
 }
 
 @media (max-width: 768px) {
-  .nav-links {
-    display: none;
-  }
-
   .contact-card {
     flex-direction: column;
     text-align: center;
@@ -688,10 +630,6 @@
 }
 
 @media (max-width: 520px) {
-  .card {
-    padding: 32px 24px;
-  }
-
   .hero-title {
     font-size: 30px;
   }

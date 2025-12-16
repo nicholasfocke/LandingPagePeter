@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback } from "react";
 import type { MouseEvent } from "react";
+import SiteHeader from "@/components/layout/SiteHeader";
 import "./page.css";
 
 export default function Home() {
@@ -23,53 +24,7 @@ export default function Home() {
   return (
     <div className="page">
       <main className="card">
-        <header className="navbar">
-          <span className="brand">HPE</span>
-          <nav className="nav-links">
-            <Link
-              href="#home"
-              scroll={false}
-              onClick={(event) => handleSmoothScroll(event, "#home")}
-            >
-              Início
-            </Link>
-            <Link
-              href="#metodo"
-              scroll={false}
-              onClick={(event) => handleSmoothScroll(event, "#metodo")}
-            >
-              Método
-            </Link>
-            <Link
-              href="#servicos"
-              scroll={false}
-              onClick={(event) => handleSmoothScroll(event, "#servicos")}
-            >
-              Serviços
-            </Link>
-            <Link
-              href="#clientes"
-              scroll={false}
-              onClick={(event) => handleSmoothScroll(event, "#clientes")}
-            >
-              Clientes
-            </Link>
-            <Link
-              href="#testemunhos"
-              scroll={false}
-              onClick={(event) => handleSmoothScroll(event, "#testemunhos")}
-            >
-              Testemunhos
-            </Link>
-            <Link
-              href="#contato"
-              scroll={false}
-              onClick={(event) => handleSmoothScroll(event, "#contato")}
-            >
-              Contato
-            </Link>
-          </nav>
-        </header>
+        <SiteHeader onSectionClick={handleSmoothScroll} />
 
         <section className="hero" id="home">
           <div className="hero-content">

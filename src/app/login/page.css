@@ -1,0 +1,100 @@
+.login-card {
+  gap: 32px;
+}
+
+.login-hero {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 36px;
+  align-items: center;
+}
+
+.login-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.login-copy h1 {
+  margin: 0;
+  font-size: 34px;
+  color: #0d1c3d;
+}
+
+.login-description {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #4a5877;
+}
+
+.login-highlights {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: #23345c;
+  font-weight: 600;
+}
+
+.login-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.login-form {
+  background: linear-gradient(180deg, #f6f8ff, #ffffff);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border: 1px solid rgba(31, 60, 136, 0.12);
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-field label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #0d1c3d;
+}
+
+.form-field input {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(31, 60, 136, 0.2);
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.form-note {
+  margin: 0;
+  font-size: 13px;
+  color: #4a5877;
+  line-height: 1.6;
+}
+
+@media (max-width: 980px) {
+  .login-hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .login-copy h1 {
+    font-size: 28px;
+  }
+
+  .login-form {
+    padding: 18px;
+  }
+}
