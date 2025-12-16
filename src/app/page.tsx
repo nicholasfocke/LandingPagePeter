@@ -350,34 +350,30 @@ export default function Home() {
             </p>
           </div>
           <div className="testimonial-grid">
-            <div className="testimonial-card">
-              <div className="video-placeholder" aria-hidden="true" />
-              <div>
-                <h3>Peixoto</h3>
-                <p>CEO do setor imobiliário compartilha como passou a fechar negócios globais.</p>
+            {[
+              { name: "Eduardo Acioli", file: "Eduardo acioli.mp4" },
+              { name: "Gerard", file: "gerard.mp4" },
+              { name: "Hugo", file: "hugo .mp4" },
+              { name: "João Marcelo Lyra", file: "Joao marcelo lyra.mp4" },
+              { name: "Lucas", file: "Lucas.mp4" },
+              { name: "Paulo Toledo", file: "paulo toledo.mp4" },
+              { name: "Rodrigo Coifman", file: "Rodrigo coifman.mp4" },
+            ].map((testimonial) => (
+              <div className="testimonial-card" key={testimonial.file}>
+                <video
+                  className="testimonial-video"
+                  controls
+                  preload="metadata"
+                  src={`/videos/${encodeURIComponent(testimonial.file)}`}
+                >
+                  Seu navegador não suporta a reprodução de vídeo.
+                </video>
+                <div>
+                  <h3>{testimonial.name}</h3>
+                  <p className="file-name">Arquivo: {testimonial.file}</p>
+                </div>
               </div>
-            </div>
-            <div className="testimonial-card">
-              <div className="video-placeholder" aria-hidden="true" />
-              <div>
-                <h3>Carol</h3>
-                <p>Executiva de marketing relata o impacto das aulas nas apresentações internacionais.</p>
-              </div>
-            </div>
-            <div className="testimonial-card">
-              <div className="video-placeholder" aria-hidden="true" />
-              <div>
-                <h3>Hugo</h3>
-                <p>Empreendedor tech fala sobre o ganho de fluência para liderar equipes globais.</p>
-              </div>
-            </div>
-            <div className="testimonial-card">
-              <div className="video-placeholder" aria-hidden="true" />
-              <div>
-                <h3>Eduardo</h3>
-                <p>Executivo financeiro comenta a evolução em negociações e reuniões complexas.</p>
-              </div>
-            </div>
+            ))}
           </div>
         </section>
 
