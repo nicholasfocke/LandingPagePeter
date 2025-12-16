@@ -55,6 +55,8 @@
   color: #172853;
   font-weight: 700;
   text-decoration: none;
+  border: none;
+  cursor: pointer;
   box-shadow: 0 16px 28px rgba(255, 204, 77, 0.32);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }

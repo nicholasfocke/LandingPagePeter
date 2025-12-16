@@ -411,6 +411,134 @@
   box-shadow: 0 12px 28px rgba(255, 204, 77, 0.35);
 }
 
+.videos-section {
+  gap: 36px;
+}
+
+.videos-hero {
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr;
+  gap: 36px;
+  align-items: center;
+}
+
+.videos-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.videos-copy h2 {
+  margin: 0;
+}
+
+.videos-description {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #4a5877;
+}
+
+.videos-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.status-card {
+  background: linear-gradient(150deg, #0d1c3d, #1f3c88);
+  color: #ffffff;
+  border-radius: 22px;
+  padding: 24px;
+  box-shadow: 0 18px 36px rgba(13, 28, 61, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.status-card h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.status-card ol {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.status-card li {
+  line-height: 1.6;
+}
+
+.status-note {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.6;
+}
+
+.videos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.video-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 20px;
+  border: 1px solid rgba(31, 60, 136, 0.12);
+  box-shadow: 0 16px 28px rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.video-card h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #0d1c3d;
+}
+
+.video-card p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #4a5877;
+}
+
+.video-chip {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background-color: #f1f4ff;
+  color: #1f3c88;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.video-meta {
+  font-size: 13px;
+  color: #5c6885;
+  font-weight: 600;
+}
+
+.videos-grid .primary-button {
+  width: fit-content;
+  padding: 0 16px;
+}
+
+.videos-grid .primary-button[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
 .bio-section {
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
@@ -585,6 +713,10 @@
   .bio-highlight {
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   }
+
+  .videos-hero {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 768px) {
@@ -641,5 +773,13 @@
   .section-alt,
   .split-section {
     padding: 32px;
+  }
+
+  .videos-copy h2 {
+    font-size: 28px;
+  }
+
+  .status-card {
+    padding: 20px;
   }
 }

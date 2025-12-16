@@ -15,6 +15,7 @@ const navigationLinks = [
   { label: "Início", href: "/#home", targetId: "#home" },
   { label: "Método", href: "/#metodo", targetId: "#metodo" },
   { label: "Serviços", href: "/#servicos", targetId: "#servicos" },
+  { label: "Catálogo", href: "/#catalogo", targetId: "#catalogo" },
   { label: "Clientes", href: "/#clientes", targetId: "#clientes" },
   { label: "Testemunhos", href: "/#testemunhos", targetId: "#testemunhos" },
   { label: "Contato", href: "/#contato", targetId: "#contato" },

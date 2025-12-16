@@ -28,10 +28,10 @@ export default function LoginPage() {
               ))}
             </ul>
             <div className="login-actions">
-              <Link className="secondary-link" href="/#contato">
+              <button className="secondary-link" type="button">
                 Quero comprar o curso
-              </Link>
-              <Link className="text-link" href="/videos">
+              </button>
+              <Link className="text-link" href="/#catalogo">
                 Ver catálogo de aulas
               </Link>
             </div>
