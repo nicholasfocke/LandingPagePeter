@@ -359,7 +359,7 @@ export default function Home() {
               { name: "Paulo Toledo", file: "paulo toledo.mp4" },
               { name: "Rodrigo Coifman", file: "Rodrigo coifman.mp4" },
             ].map((testimonial) => (
-              <div className="testimonial-card" key={testimonial.file}>
+              <div className="testimonial-card" key={testimonial.name}>
                 <video
                   className="testimonial-video"
                   controls
@@ -370,7 +370,6 @@ export default function Home() {
                 </video>
                 <div>
                   <h3>{testimonial.name}</h3>
-                  <p className="file-name">Arquivo: {testimonial.file}</p>
                 </div>
               </div>
             ))}
