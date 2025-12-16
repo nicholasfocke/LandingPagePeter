@@ -88,14 +88,38 @@ export default function Home() {
               <div className="hero-highlight">Domine apresentações, reuniões e negociações em inglês</div>
             </div>
             <div className="hero-actions">
-              <Link
-                className="hero-button"
-                href="https://api.whatsapp.com/send/?phone=5582999214182"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Fale com Peter
-              </Link>
+              <div className="hero-socials">
+                <Link
+                  className="hero-social-button"
+                  href="https://api.whatsapp.com/send/?phone=5582999214182"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Fale com Peter pelo WhatsApp"
+                >
+                  <Image
+                    src="/components/whatsapp.svg"
+                    alt="WhatsApp"
+                    width={28}
+                    height={28}
+                    className="hero-social-icon"
+                  />
+                </Link>
+                <Link
+                  className="hero-social-button"
+                  href="https://www.instagram.com/peterfocke/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Siga Peter no Instagram"
+                >
+                  <Image
+                    src="/components/instagram.svg"
+                    alt="Instagram"
+                    width={28}
+                    height={28}
+                    className="hero-social-icon"
+                  />
+                </Link>
+              </div>
               <span className="hero-location">Atendendo líderes no Brasil e no exterior</span>
             </div>
           </div>

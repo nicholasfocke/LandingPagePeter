@@ -104,27 +104,33 @@
   gap: 18px;
 }
 
-.hero-button {
+.hero-socials {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hero-social-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 56px;
   height: 56px;
-  padding: 0 32px;
   background-color: #ffcc4d;
   border-radius: 14px;
-  border: none;
-  font-size: 16px;
-  font-weight: 700;
-  color: #172853;
-  cursor: pointer;
   box-shadow: 0 20px 35px rgba(255, 204, 77, 0.35);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   text-decoration: none;
 }
 
-.hero-button:hover {
+.hero-social-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 24px 40px rgba(255, 204, 77, 0.45);
+}
+
+.hero-social-icon {
+  width: 28px;
+  height: 28px;
 }
 
 .hero-location {
@@ -690,7 +696,7 @@
     font-size: 30px;
   }
 
-  .hero-button {
+  .hero-socials {
     width: 100%;
   }
 
