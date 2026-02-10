@@ -56,12 +56,13 @@ export default function LoginPage() {
                 placeholder="Digite sua senha"
               />
             </div>
-            <button className="primary-button" type="button">
-              Fazer login
-            </button>
+            <Link className="primary-button" href="/videos">
+              Acessar área do aluno
+            </Link>
             <p className="form-note">
-              Após a confirmação de pagamento pelo Stripe, seus vídeos serão
-              liberados automaticamente nesta área.
+              Fluxo de autenticação será conectado ao gateway de pagamento em
+              breve. Por enquanto, a área de aulas está disponível em modo de
+              demonstração.
             </p>
           </form>
         </section>
