@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
@@ -10,7 +10,8 @@ import {
 } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import SiteHeader from "@/components/layout/SiteHeader";
-import { auth, db } from "@/firebase/firebaseConfig";
+import { auth, db, firebaseInitError } from "@/firebase/firebaseConfig";
+import { getFirebaseMessage } from "@/firebase/firebaseErrors";
 import "./page.css";
 
 const loginHighlights = [
@@ -21,15 +22,48 @@ const loginHighlights = [
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
+
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
+    const message = searchParams.get("error");
+    if (message) {
+      setError(message);
+      return;
+    }
+
+    if (firebaseInitError) {
+      setError(firebaseInitError);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (!auth || !db) {
+      return;
+    }
+
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        return;
+      }
+
+      try {
+        const profileRef = doc(db, "users", user.uid);
+        const profileDoc = await getDoc(profileRef);
+
+        if (!profileDoc.exists()) {
+          await signOut(auth);
+          setError("Usuário autenticado, mas sem cadastro no banco (users/{uid}).");
+          return;
+        }
+
         router.replace("/videos");
+      } catch (firebaseError) {
+        setError(getFirebaseMessage(firebaseError));
       }
     });
 
@@ -41,6 +75,12 @@ export default function LoginPage() {
     setError("");
     setIsLoading(true);
 
+    if (!auth || !db) {
+      setError(firebaseInitError || "Firebase indisponível no momento.");
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const credential = await signInWithEmailAndPassword(auth, email, password);
       const profileRef = doc(db, "users", credential.user.uid);
@@ -48,13 +88,13 @@ export default function LoginPage() {
 
       if (!profileDoc.exists()) {
         await signOut(auth);
-        setError("Conta não encontrada no banco de dados. Fale com o suporte.");
+        setError("Usuário autenticado, mas sem cadastro no banco (users/{uid}).");
         return;
       }
 
       router.replace("/videos");
-    } catch {
-      setError("E-mail ou senha inválidos.");
+    } catch (firebaseError) {
+      setError(getFirebaseMessage(firebaseError));
     } finally {
       setIsLoading(false);
     }

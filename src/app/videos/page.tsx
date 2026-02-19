@@ -18,33 +18,48 @@ export default function VideosPage() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
 
   useEffect(() => {
+    if (!auth || !db) {
+      router.replace("/login?error=" + encodeURIComponent("Firebase não configurado."));
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (!user) {
         router.replace("/login");
         return;
       }
 
-      const profileRef = doc(db, "users", user.uid);
-      const profileDoc = await getDoc(profileRef);
+      try {
+        const profileRef = doc(db, "users", user.uid);
+        const profileDoc = await getDoc(profileRef);
 
-      if (!profileDoc.exists()) {
+        if (!profileDoc.exists()) {
+          await signOut(auth);
+          router.replace("/login");
+          return;
+        }
+
+        const data = profileDoc.data() as UserProfile;
+        setProfile({
+          name: data.name,
+          email: data.email || user.email || "",
+        });
+        setIsLoading(false);
+      } catch {
         await signOut(auth);
-        router.replace("/login");
-        return;
+        router.replace(`/login?error=${encodeURIComponent("Sem permissão para ler users/{uid}.")}`);
       }
-
-      const data = profileDoc.data() as UserProfile;
-      setProfile({
-        name: data.name,
-        email: data.email || user.email || "",
-      });
-      setIsLoading(false);
     });
 
     return () => unsubscribe();
   }, [router]);
 
   async function handleLogout() {
+    if (!auth) {
+      router.replace("/login");
+      return;
+    }
+
     await signOut(auth);
     router.replace("/login");
   }
