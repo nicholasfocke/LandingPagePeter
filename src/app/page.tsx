@@ -8,34 +8,10 @@ import SiteHeader from "@/components/layout/SiteHeader";
 import "./page.css";
 
 const videoLibrary = [
-  {
-    title: "Domine reuniões estratégicas",
-    description:
-      "Técnicas para liderar calls e encontros com equipes globais sem perder clareza.",
-    duration: "12 aulas • 2h40",
-    status: "Disponível em breve",
-  },
-  {
-    title: "Pitch e apresentações para investidores",
-    description:
-      "Estrutura de storytelling, vocabulário financeiro e frases-chave para pitch decks.",
-    duration: "10 aulas • 2h10",
-    status: "Disponível em breve",
-  },
-  {
-    title: "Negociação avançada em inglês",
-    description:
-      "Modelos de negociação, âncoras e follow-up em um contexto internacional.",
-    duration: "8 aulas • 1h50",
-    status: "Disponível em breve",
-  },
-  {
-    title: "Inglês para liderança e feedback",
-    description:
-      "Conduza 1:1s, feedbacks difíceis e alinhamento de expectativas com o time.",
-    duration: "6 aulas • 1h15",
-    status: "Disponível em breve",
-  },
+  { id: 1, status: "Disponível em breve" },
+  { id: 2, status: "Disponível em breve" },
+  { id: 3, status: "Disponível em breve" },
+  { id: 4, status: "Disponível em breve" },
 ];
 
 export default function Home() {
@@ -193,14 +169,8 @@ export default function Home() {
 
           <div className="videos-grid">
             {videoLibrary.map((video) => (
-              <article className="video-card" key={video.title}>
+              <article className="video-card" key={video.id}>
                 <div className="video-chip">{video.status}</div>
-                <h3>{video.title}</h3>
-                <p>{video.description}</p>
-                <div className="video-meta">{video.duration}</div>
-                <button className="primary-button" type="button" disabled>
-                  Acessar aula
-                </button>
               </article>
             ))}
           </div>

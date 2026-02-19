@@ -1,5 +1,16 @@
+"use client";
+
 import Link from "next/link";
+import { FormEvent, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 import SiteHeader from "@/components/layout/SiteHeader";
+import { auth, db } from "@/firebase/firebaseConfig";
 import "./page.css";
 
 const loginHighlights = [
@@ -9,6 +20,46 @@ const loginHighlights = [
 ];
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        router.replace("/videos");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [router]);
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError("");
+    setIsLoading(true);
+
+    try {
+      const credential = await signInWithEmailAndPassword(auth, email, password);
+      const profileRef = doc(db, "users", credential.user.uid);
+      const profileDoc = await getDoc(profileRef);
+
+      if (!profileDoc.exists()) {
+        await signOut(auth);
+        setError("Conta não encontrada no banco de dados. Fale com o suporte.");
+        return;
+      }
+
+      router.replace("/videos");
+    } catch {
+      setError("E-mail ou senha inválidos.");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
     <div className="page">
       <main className="card login-card">
@@ -37,7 +88,7 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <form className="login-form">
+          <form className="login-form" onSubmit={handleSubmit}>
             <div className="form-field">
               <label htmlFor="email">E-mail</label>
               <input
@@ -45,6 +96,10 @@ export default function LoginPage() {
                 name="email"
                 type="email"
                 placeholder="seunome@email.com"
+                autoComplete="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                required
               />
             </div>
             <div className="form-field">
@@ -54,16 +109,16 @@ export default function LoginPage() {
                 name="password"
                 type="password"
                 placeholder="Digite sua senha"
+                autoComplete="current-password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                required
               />
             </div>
-            <Link className="primary-button" href="/videos">
-              Acessar área do aluno
-            </Link>
-            <p className="form-note">
-              Fluxo de autenticação será conectado ao gateway de pagamento em
-              breve. Por enquanto, a área de aulas está disponível em modo de
-              demonstração.
-            </p>
+            <button className="primary-button" type="submit" disabled={isLoading}>
+              {isLoading ? "Entrando..." : "Acessar área do aluno"}
+            </button>
+            {error ? <p className="form-error">{error}</p> : null}
           </form>
         </section>
       </main>
