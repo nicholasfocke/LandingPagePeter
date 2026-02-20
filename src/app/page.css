@@ -471,11 +471,11 @@
   color: #ffffff;
 }
 
-.videos-actions .text-link {
-  color: #ffffff;
-}
-
-.videos-actions .text-link:hover {
+.videos-actions .text-link,
+.videos-actions .text-link:visited,
+.videos-actions .text-link:hover,
+.videos-actions .text-link:active,
+.videos-actions .text-link:focus-visible {
   color: #ffffff;
 }
 
