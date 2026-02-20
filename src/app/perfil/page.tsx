@@ -1,24 +1,25 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "@/firebase/firebaseConfig";
 import "./page.css";
 
-const upcomingVideos = [
-  { id: 1, title: "Vídeo 1", status: "Em breve" },
-  { id: 2, title: "Vídeo 2", status: "Em breve" },
-  { id: 3, title: "Vídeo 3", status: "Em breve" },
-  { id: 4, title: "Vídeo 4", status: "Em breve" },
-  { id: 5, title: "Vídeo 5", status: "Em breve" },
-];
+type UserProfile = {
+  email?: string;
+  nome?: string;
+  fullName?: string;
+  phone?: string;
+};
 
-export default function VideosPage() {
+export default function PerfilPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [uid, setUid] = useState("");
 
   useEffect(() => {
     if (!auth || !db) {
@@ -45,6 +46,14 @@ export default function VideosPage() {
           return;
         }
 
+        const data = profileDoc.data() as UserProfile;
+
+        setProfile({
+          email: data.email || user.email || "",
+          nome: data.nome || data.fullName || "",
+          phone: data.phone || "",
+        });
+        setUid(user.uid);
         setIsLoading(false);
       } catch {
         await signOut(authClient);
@@ -68,8 +77,8 @@ export default function VideosPage() {
   if (isLoading) {
     return (
       <div className="page">
-        <main className="card videos-card">
-          <p className="loading-message">Carregando sua área do aluno...</p>
+        <main className="card profile-card-page">
+          <p className="loading-message">Carregando perfil do usuário...</p>
         </main>
       </div>
     );
@@ -77,29 +86,39 @@ export default function VideosPage() {
 
   return (
     <div className="page">
-      <main className="card videos-card">
-        <div className="videos-top-actions">
-          <Link className="secondary-link" href="/perfil">
-            Ver perfil do usuário
+      <main className="card profile-card-page">
+        <div className="profile-top-actions">
+          <Link className="secondary-link" href="/videos">
+            Ver vídeos
           </Link>
           <button className="primary-button" type="button" onClick={handleLogout}>
             Logout
           </button>
         </div>
 
-        <section className="videos-empty-state">
+        <section className="profile-highlight">
           <p className="eyebrow">Área do aluno HPE</p>
-          <h1>Vídeos do curso serão lançados em breve.</h1>
-          <p>Acompanhe os próximos conteúdos e volte aqui para assistir quando estiverem liberados.</p>
+          <h1>Perfil do usuário</h1>
+          <p>Suas informações ficam disponíveis aqui após o login.</p>
         </section>
 
-        <section className="videos-grid" aria-label="Próximos vídeos">
-          {upcomingVideos.map((video) => (
-            <article className="video-card" key={video.id}>
-              <h2>{video.title}</h2>
-              <span className="video-chip">{video.status}</span>
-            </article>
-          ))}
+        <section className="profile-details">
+          <article className="detail-item">
+            <h2>Nome</h2>
+            <p>{profile?.nome || "Não informado"}</p>
+          </article>
+          <article className="detail-item">
+            <h2>E-mail</h2>
+            <p>{profile?.email || "Não informado"}</p>
+          </article>
+          <article className="detail-item">
+            <h2>Telefone</h2>
+            <p>{profile?.phone || "Não informado"}</p>
+          </article>
+          <article className="detail-item">
+            <h2>ID do usuário</h2>
+            <p>{uid || "Não informado"}</p>
+          </article>
         </section>
       </main>
     </div>

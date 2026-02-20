@@ -64,7 +64,7 @@ export default function LoginPage() {
           return;
         }
 
-        router.replace("/videos");
+        router.replace("/perfil");
       } catch (firebaseError) {
         setError(getFirebaseMessage(firebaseError));
       }
@@ -98,7 +98,7 @@ export default function LoginPage() {
         return;
       }
 
-      router.replace("/videos");
+      router.replace("/perfil");
     } catch (firebaseError) {
       setError(getFirebaseMessage(firebaseError));
     } finally {
