@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
+import PurchaseModal from "@/components/checkout/PurchaseModal";
 import { useRouter } from "next/navigation";
 import {
   onAuthStateChanged,
@@ -26,6 +27,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
 
   useEffect(() => {
     const message = new URLSearchParams(window.location.search).get("error");
@@ -124,7 +126,11 @@ export default function LoginPage() {
               ))}
             </ul>
             <div className="login-actions">
-              <button className="secondary-link" type="button">
+              <button
+                className="secondary-link"
+                type="button"
+                onClick={() => setIsPurchaseModalOpen(true)}
+              >
                 Quero comprar o curso
               </button>
               <Link className="text-link" href="/#catalogo">
@@ -167,6 +173,10 @@ export default function LoginPage() {
           </form>
         </section>
       </main>
+      <PurchaseModal
+        isOpen={isPurchaseModalOpen}
+        onClose={() => setIsPurchaseModalOpen(false)}
+      />
     </div>
   );
 }

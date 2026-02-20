@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import type { MouseEvent } from "react";
 import SiteHeader from "@/components/layout/SiteHeader";
+import PurchaseModal from "@/components/checkout/PurchaseModal";
 import "./page.css";
 
 const videoLibrary = [
@@ -21,6 +22,8 @@ const videoLibrary = [
 ];
 
 export default function Home() {
+  const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
+
   const handleSmoothScroll = useCallback(
     (event: MouseEvent<HTMLAnchorElement>, target: string) => {
       event.preventDefault();
@@ -151,7 +154,11 @@ export default function Home() {
                 lançamento de novos conteúdos.
               </p>
               <div className="videos-actions">
-                <button className="secondary-link" type="button">
+                <button
+                  className="secondary-link"
+                  type="button"
+                  onClick={() => setIsPurchaseModalOpen(true)}
+                >
                   Quero comprar o curso
                 </button>
                 <Link className="text-link" href="/login">
@@ -429,6 +436,10 @@ export default function Home() {
           </a>
         </section>
       </main>
+      <PurchaseModal
+        isOpen={isPurchaseModalOpen}
+        onClose={() => setIsPurchaseModalOpen(false)}
+      />
     </div>
   );
 }

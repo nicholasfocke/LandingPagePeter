@@ -10,10 +10,13 @@ export function getFirebaseMessage(error: unknown) {
   if (
     code === "auth/invalid-login-credentials" ||
     code === "auth/user-not-found" ||
-    code === "auth/wrong-password" ||
-    code === "auth/invalid-credential"
+    code === "auth/wrong-password"
   ) {
     return "E-mail ou senha inválidos.";
+  }
+
+  if (code === "auth/invalid-credential") {
+    return "Credenciais inválidas. Se acabou de comprar, verifique seu e-mail para criar sua senha antes do primeiro login.";
   }
 
   if (code === "auth/invalid-api-key") {
