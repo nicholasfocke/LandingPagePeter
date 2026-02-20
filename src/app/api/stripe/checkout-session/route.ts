@@ -1,6 +1,7 @@
 export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
+import { getFirebaseAdmin } from "@/lib/firebaseAdmin";
 import { stripe } from "@/lib/stripe";
 import { validatePurchaseInput } from "@/lib/purchaseValidation";
 
@@ -48,6 +49,40 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: validation.message }, { status: 400 });
     }
 
+    const { auth, db } = getFirebaseAdmin();
+
+    let authUserExists = false;
+    try {
+      await auth.getUserByEmail(validation.data.email);
+      authUserExists = true;
+    } catch (error) {
+      const firebaseError = error as { code?: string };
+      if (firebaseError.code !== "auth/user-not-found") {
+        throw error;
+      }
+    }
+
+    const existingUserSnapshot = await db
+      .collection("users")
+      .where("email", "==", validation.data.email)
+      .limit(1)
+      .get();
+
+    const hasExistingUserInDb = !existingUserSnapshot.empty;
+    const existingUser = hasExistingUserInDb ? existingUserSnapshot.docs[0].data() : null;
+
+    if (authUserExists || hasExistingUserInDb) {
+      if (existingUser?.purchasedCourse || existingUser?.isActive) {
+        return NextResponse.json(
+          {
+            error:
+              "Já existe um cadastro ativo com este e-mail. Faça login para acessar o curso.",
+          },
+          { status: 409 }
+        );
+      }
+    }
+
     const { appUrl, priceId, priceTier } = getCheckoutConfig();
 
     const session = await stripe.checkout.sessions.create({
@@ -55,7 +90,7 @@ export async function POST(request: Request) {
       line_items: [{ price: priceId, quantity: 1 }],
       customer_email: validation.data.email,
       success_url: `${appUrl}/checkout/sucesso?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${appUrl}/checkout/cancelado`,
+      cancel_url: `${appUrl}/#catalogo`,
       metadata: {
         name: validation.data.name,
         cpf: validation.data.cpf,

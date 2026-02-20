@@ -9,6 +9,7 @@ type SiteHeaderProps = {
     event: MouseEvent<HTMLAnchorElement>,
     targetId: string
   ) => void;
+  onPurchaseClick?: () => void;
 };
 
 const navigationLinks = [
@@ -21,7 +22,7 @@ const navigationLinks = [
   { label: "Contato", href: "/#contato", targetId: "#contato" },
 ];
 
-export default function SiteHeader({ onSectionClick }: SiteHeaderProps) {
+export default function SiteHeader({ onSectionClick, onPurchaseClick }: SiteHeaderProps) {
   return (
     <header className="navbar">
       <span className="brand">HPE</span>
@@ -43,9 +44,24 @@ export default function SiteHeader({ onSectionClick }: SiteHeaderProps) {
       </nav>
       <div className="auth-actions">
         <span className="auth-note">Já possui uma conta no curso?</span>
-        <Link className="auth-button" href="/login">
-          Fazer login
-        </Link>
+        <div className="auth-buttons">
+          {onPurchaseClick ? (
+            <button
+              type="button"
+              className="auth-button auth-button-outline"
+              onClick={onPurchaseClick}
+            >
+              Comprar curso
+            </button>
+          ) : (
+            <Link className="auth-button auth-button-outline" href="/#catalogo">
+              Comprar curso
+            </Link>
+          )}
+          <Link className="auth-button" href="/login">
+            Fazer login
+          </Link>
+        </div>
       </div>
     </header>
   );

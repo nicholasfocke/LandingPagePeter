@@ -40,7 +40,10 @@ export default function Home() {
   return (
     <div className="page">
       <main className="card">
-        <SiteHeader onSectionClick={handleSmoothScroll} />
+        <SiteHeader
+          onSectionClick={handleSmoothScroll}
+          onPurchaseClick={() => setIsPurchaseModalOpen(true)}
+        />
 
         <section className="hero" id="home">
           <div className="hero-content">
