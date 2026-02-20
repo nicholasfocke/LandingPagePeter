@@ -1,5 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-let cachedAdmin: any = null;
+import "server-only";
+import type { App } from "firebase-admin/app";
+import { cert, getApps, initializeApp } from "firebase-admin/app";
+import { getAuth } from "firebase-admin/auth";
+import { FieldValue, getFirestore } from "firebase-admin/firestore";
+
+type FirebaseAdminInstance = {
+  auth: ReturnType<typeof getAuth>;
+  db: ReturnType<typeof getFirestore>;
+  FieldValue: typeof FieldValue;
+};
+
+let cachedAdmin: FirebaseAdminInstance | null = null;
 
 function getFirebaseAdminJson() {
   const raw = process.env.FIREBASE_ADMIN_JSON;
@@ -14,10 +25,15 @@ function getFirebaseAdminJson() {
   }
 }
 
-function runtimeRequire(moduleName: string) {
-  // Evita inclusão acidental de SDK Admin no client bundle.
-  const req = eval("require");
-  return req(moduleName);
+function getOrCreateAdminApp() {
+  const apps = getApps();
+  if (apps.length > 0) {
+    return apps[0] as App;
+  }
+
+  return initializeApp({
+    credential: cert(getFirebaseAdminJson()),
+  });
 }
 
 export function getFirebaseAdmin() {
@@ -25,20 +41,7 @@ export function getFirebaseAdmin() {
     return cachedAdmin;
   }
 
-  const adminAppModule = runtimeRequire("firebase-admin/app");
-  const adminAuthModule = runtimeRequire("firebase-admin/auth");
-  const adminFirestoreModule = runtimeRequire("firebase-admin/firestore");
-
-  const { getApps, cert, initializeApp } = adminAppModule;
-  const { getAuth } = adminAuthModule;
-  const { getFirestore, FieldValue } = adminFirestoreModule;
-
-  const firebaseAdminJson = getFirebaseAdminJson();
-  const app = getApps().length
-    ? getApps()[0]
-    : initializeApp({
-        credential: cert(firebaseAdminJson),
-      });
+  const app = getOrCreateAdminApp();
 
   cachedAdmin = {
     auth: getAuth(app),
