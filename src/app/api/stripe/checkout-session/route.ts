@@ -29,6 +29,40 @@ function getCheckoutConfig() {
   } as const;
 }
 
+async function hasActiveUserByEmail(email: string) {
+  try {
+    const { auth, db } = getFirebaseAdmin();
+
+    let authUserExists = false;
+    try {
+      await auth.getUserByEmail(email);
+      authUserExists = true;
+    } catch (error) {
+      const firebaseError = error as { code?: string };
+      if (firebaseError.code !== "auth/user-not-found") {
+        throw error;
+      }
+    }
+
+    const existingUserSnapshot = await db
+      .collection("users")
+      .where("email", "==", email)
+      .limit(1)
+      .get();
+
+    const hasExistingUserInDb = !existingUserSnapshot.empty;
+
+    return {
+      shouldBlock: authUserExists || hasExistingUserInDb,
+    };
+  } catch (error) {
+    console.error("Falha ao validar usuário existente no Firebase antes do checkout.", error);
+    return {
+      shouldBlock: false,
+    };
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as {
@@ -49,38 +83,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: validation.message }, { status: 400 });
     }
 
-    const { auth, db } = getFirebaseAdmin();
-
-    let authUserExists = false;
-    try {
-      await auth.getUserByEmail(validation.data.email);
-      authUserExists = true;
-    } catch (error) {
-      const firebaseError = error as { code?: string };
-      if (firebaseError.code !== "auth/user-not-found") {
-        throw error;
-      }
-    }
-
-    const existingUserSnapshot = await db
-      .collection("users")
-      .where("email", "==", validation.data.email)
-      .limit(1)
-      .get();
-
-    const hasExistingUserInDb = !existingUserSnapshot.empty;
-    const existingUser = hasExistingUserInDb ? existingUserSnapshot.docs[0].data() : null;
-
-    if (authUserExists || hasExistingUserInDb) {
-      if (existingUser?.purchasedCourse || existingUser?.isActive) {
-        return NextResponse.json(
-          {
-            error:
-              "Já existe um cadastro ativo com este e-mail. Faça login para acessar o curso.",
-          },
-          { status: 409 }
-        );
-      }
+    const existingUserCheck = await hasActiveUserByEmail(validation.data.email);
+    if (existingUserCheck.shouldBlock) {
+      return NextResponse.json(
+        {
+          error:
+            "Já existe um cadastro ativo com este e-mail. Faça login para acessar o curso.",
+        },
+        { status: 409 }
+      );
     }
 
     const { appUrl, priceId, priceTier } = getCheckoutConfig();
