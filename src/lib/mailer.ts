@@ -3,17 +3,19 @@ import nodemailer from "nodemailer";
 const emailUser = process.env.EMAIL_USER;
 const emailPass = process.env.EMAIL_PASS;
 
-if (!emailUser || !emailPass) {
-  throw new Error("EMAIL_USER/EMAIL_PASS não configuradas.");
-}
+function getTransporter() {
+  if (!emailUser || !emailPass) {
+    throw new Error("EMAIL_USER/EMAIL_PASS não configuradas.");
+  }
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: emailUser,
-    pass: emailPass,
-  },
-});
+  return nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: emailUser,
+      pass: emailPass,
+    },
+  });
+}
 
 type AccessEmailInput = {
   to: string;
@@ -34,6 +36,8 @@ export async function sendPasswordResetEmail({
   name,
   resetPasswordUrl,
 }: PasswordResetEmailInput) {
+  const transporter = getTransporter();
+
   await transporter.sendMail({
     from: `High Performance English <${emailUser}>`,
     to,
@@ -60,6 +64,8 @@ export async function sendCourseAccessEmail({
   setPasswordUrl,
   loginUrl,
 }: AccessEmailInput) {
+  const transporter = getTransporter();
+
   await transporter.sendMail({
     from: `High Performance English <${emailUser}>`,
     to,
