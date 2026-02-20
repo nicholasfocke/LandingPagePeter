@@ -28,6 +28,11 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
+  const [isForgotModalOpen, setIsForgotModalOpen] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotError, setForgotError] = useState("");
+  const [forgotSuccess, setForgotSuccess] = useState("");
+  const [isForgotLoading, setIsForgotLoading] = useState(false);
 
   useEffect(() => {
     const message = new URLSearchParams(window.location.search).get("error");
@@ -107,6 +112,42 @@ export default function LoginPage() {
     }
   }
 
+  async function handleForgotPassword(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setForgotError("");
+    setForgotSuccess("");
+
+    const normalizedEmail = forgotEmail.trim().toLowerCase();
+    if (!normalizedEmail) {
+      setForgotError("Informe seu e-mail para continuar.");
+      return;
+    }
+
+    setIsForgotLoading(true);
+
+    try {
+      const response = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: normalizedEmail }),
+      });
+
+      const payload = (await response.json()) as { error?: string };
+
+      if (!response.ok) {
+        setForgotError(payload.error ?? "Não foi possível enviar o e-mail agora.");
+        return;
+      }
+
+      setForgotSuccess("Enviamos o link de redefinição para seu e-mail.");
+      setForgotEmail("");
+    } catch {
+      setForgotError("Não foi possível enviar o e-mail agora.");
+    } finally {
+      setIsForgotLoading(false);
+    }
+  }
+
   return (
     <div className="page">
       <main className="card login-card">
@@ -169,6 +210,18 @@ export default function LoginPage() {
             <button className="primary-button" type="submit" disabled={isLoading}>
               {isLoading ? "Entrando..." : "Acessar área do aluno"}
             </button>
+            <button
+              type="button"
+              className="forgot-password-button"
+              onClick={() => {
+                setIsForgotModalOpen(true);
+                setForgotError("");
+                setForgotSuccess("");
+                setForgotEmail(email);
+              }}
+            >
+              Esqueci minha senha
+            </button>
             {error ? <p className="form-error">{error}</p> : null}
           </form>
         </section>
@@ -177,6 +230,39 @@ export default function LoginPage() {
         isOpen={isPurchaseModalOpen}
         onClose={() => setIsPurchaseModalOpen(false)}
       />
+
+      {isForgotModalOpen ? (
+        <div className="checkout-modal-overlay" role="presentation" onClick={() => setIsForgotModalOpen(false)}>
+          <div className="checkout-modal" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}>
+            <button
+              type="button"
+              className="checkout-modal-close"
+              onClick={() => setIsForgotModalOpen(false)}
+            >
+              ×
+            </button>
+            <h2>Recuperar senha</h2>
+            <p>Informe seu e-mail cadastrado para receber o link de redefinição.</p>
+
+            <form className="checkout-modal-form" onSubmit={handleForgotPassword}>
+              <label htmlFor="forgot-email">E-mail</label>
+              <input
+                id="forgot-email"
+                type="email"
+                value={forgotEmail}
+                onChange={(event) => setForgotEmail(event.target.value)}
+                required
+                disabled={isForgotLoading}
+              />
+              <button className="primary-button" type="submit" disabled={isForgotLoading}>
+                {isForgotLoading ? "Enviando..." : "Enviar link para redefinir senha"}
+              </button>
+              {forgotError ? <p className="form-error">{forgotError}</p> : null}
+              {forgotSuccess ? <p className="form-success">{forgotSuccess}</p> : null}
+            </form>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

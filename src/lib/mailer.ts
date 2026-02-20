@@ -22,6 +22,38 @@ type AccessEmailInput = {
   loginUrl: string;
 };
 
+
+type PasswordResetEmailInput = {
+  to: string;
+  name: string;
+  resetPasswordUrl: string;
+};
+
+export async function sendPasswordResetEmail({
+  to,
+  name,
+  resetPasswordUrl,
+}: PasswordResetEmailInput) {
+  await transporter.sendMail({
+    from: `High Performance English <${emailUser}>`,
+    to,
+    subject: "Redefinir senha - High Performance English",
+    html: `
+      <div style="font-family: Arial, sans-serif; color: #1f2937; line-height: 1.5;">
+        <h2>Redefinição de senha</h2>
+        <p>Olá, ${name}!</p>
+        <p>Recebemos uma solicitação para alterar sua senha de acesso à área do aluno.</p>
+        <p>
+          <a href="${resetPasswordUrl}" style="display:inline-block;padding:10px 16px;background:#1f3c88;color:#fff;text-decoration:none;border-radius:8px;">
+            Definir nova senha
+          </a>
+        </p>
+        <p>Se você não solicitou essa alteração, ignore este e-mail.</p>
+      </div>
+    `,
+  });
+}
+
 export async function sendCourseAccessEmail({
   to,
   name,

@@ -45,6 +45,14 @@ export async function POST(request: Request) {
 
     await auth.updateUser(tokenData.uid, { password });
 
+    await db.collection("users").doc(tokenData.uid).set(
+      {
+        updatedAt: FieldValue.serverTimestamp(),
+        passwordUpdatedAt: FieldValue.serverTimestamp(),
+      },
+      { merge: true }
+    );
+
     await tokenRef.set(
       {
         used: true,

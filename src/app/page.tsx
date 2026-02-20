@@ -13,7 +13,7 @@ const videoLibrary = [
   { id: 2, title: "Primeiro contato em inglês", status: "Disponível em breve" },
   { id: 3, title: "Perguntas inteligentes", status: "Disponível em breve" },
   { id: 4, title: "Análise de necessidades", status: "Disponível em breve" },
-  { id: 5, title: "Apresentar imóveis", status: "Disponível em breve" },
+  { id: 5, title: "Vocabulário Específico", status: "Disponível em breve" },
   {
     id: 6,
     title: "Apresentar imóveis e vocabulário no restaurante",
@@ -40,7 +40,10 @@ export default function Home() {
   return (
     <div className="page">
       <main className="card">
-        <SiteHeader onSectionClick={handleSmoothScroll} />
+        <SiteHeader
+          onSectionClick={handleSmoothScroll}
+          onPurchaseClick={() => setIsPurchaseModalOpen(true)}
+        />
 
         <section className="hero" id="home">
           <div className="hero-content">

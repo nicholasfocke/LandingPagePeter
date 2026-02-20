@@ -110,3 +110,26 @@
   color: #b42318;
   line-height: 1.5;
 }
+
+.forgot-password-button {
+  margin-top: -6px;
+  align-self: flex-start;
+  border: 0;
+  background: transparent;
+  color: #1f3c88;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
+.forgot-password-button:hover {
+  text-decoration: underline;
+}
+
+.form-success {
+  margin: 0;
+  font-size: 13px;
+  color: #047857;
+  line-height: 1.5;
+}
