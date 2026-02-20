@@ -9,11 +9,11 @@ import { auth, db } from "@/firebase/firebaseConfig";
 import "./page.css";
 
 const upcomingVideos = [
-  { id: 1, title: "Vídeo 1", status: "Em breve" },
-  { id: 2, title: "Vídeo 2", status: "Em breve" },
-  { id: 3, title: "Vídeo 3", status: "Em breve" },
-  { id: 4, title: "Vídeo 4", status: "Em breve" },
-  { id: 5, title: "Vídeo 5", status: "Em breve" },
+  { id: 1, title: "Apresentações de impacto", status: "Em breve", release: "Módulo 01" },
+  { id: 2, title: "Reuniões com confiança", status: "Em breve", release: "Módulo 02" },
+  { id: 3, title: "Negociação em inglês", status: "Em breve", release: "Módulo 03" },
+  { id: 4, title: "Liderança internacional", status: "Em breve", release: "Módulo 04" },
+  { id: 5, title: "Networking estratégico", status: "Em breve", release: "Módulo 05" },
 ];
 
 export default function VideosPage() {
@@ -80,24 +80,37 @@ export default function VideosPage() {
       <main className="card videos-card">
         <div className="videos-top-actions">
           <Link className="secondary-link" href="/perfil">
-            Ver perfil do usuário
+            Meu perfil
           </Link>
           <button className="primary-button" type="button" onClick={handleLogout}>
             Logout
           </button>
         </div>
 
-        <section className="videos-empty-state">
-          <p className="eyebrow">Área do aluno HPE</p>
-          <h1>Vídeos do curso serão lançados em breve.</h1>
-          <p>Acompanhe os próximos conteúdos e volte aqui para assistir quando estiverem liberados.</p>
+        <section className="videos-hero">
+          <div className="videos-hero-content">
+            <p className="eyebrow">Área do aluno HPE</p>
+            <h1>Biblioteca em preparação para lançamento</h1>
+            <p>
+              Os conteúdos estão sendo finalizados para garantir uma experiência premium.
+              Os 5 primeiros módulos serão liberados em breve.
+            </p>
+          </div>
+          <div className="videos-hero-badge">
+            <strong>5</strong>
+            <span>vídeos programados</span>
+          </div>
         </section>
 
         <section className="videos-grid" aria-label="Próximos vídeos">
           {upcomingVideos.map((video) => (
             <article className="video-card" key={video.id}>
+              <div className="video-card-top">
+                <span className="video-module">{video.release}</span>
+                <span className="video-chip">{video.status}</span>
+              </div>
               <h2>{video.title}</h2>
-              <span className="video-chip">{video.status}</span>
+              <p>Conteúdo desbloqueado automaticamente assim que o módulo for lançado.</p>
             </article>
           ))}
         </section>

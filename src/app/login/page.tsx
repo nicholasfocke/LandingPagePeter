@@ -27,7 +27,6 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-
   useEffect(() => {
     const message = new URLSearchParams(window.location.search).get("error");
 
@@ -64,7 +63,7 @@ export default function LoginPage() {
           return;
         }
 
-        router.replace("/perfil");
+        router.replace("/videos");
       } catch (firebaseError) {
         setError(getFirebaseMessage(firebaseError));
       }
@@ -98,7 +97,7 @@ export default function LoginPage() {
         return;
       }
 
-      router.replace("/perfil");
+      router.replace("/videos");
     } catch (firebaseError) {
       setError(getFirebaseMessage(firebaseError));
     } finally {

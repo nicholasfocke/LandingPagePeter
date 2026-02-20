@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged, signOut } from "firebase/auth";
@@ -20,6 +20,15 @@ export default function PerfilPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [uid, setUid] = useState("");
+
+  const firstName = useMemo(() => {
+    const rawName = profile?.nome?.trim();
+    if (!rawName) {
+      return "Aluno";
+    }
+
+    return rawName.split(" ")[0];
+  }, [profile?.nome]);
 
   useEffect(() => {
     if (!auth || !db) {
@@ -97,14 +106,17 @@ export default function PerfilPage() {
         </div>
 
         <section className="profile-highlight">
-          <p className="eyebrow">Área do aluno HPE</p>
-          <h1>Perfil do usuário</h1>
-          <p>Suas informações ficam disponíveis aqui após o login.</p>
+          <div className="profile-avatar">{firstName.charAt(0).toUpperCase()}</div>
+          <div className="profile-highlight-copy">
+            <p className="eyebrow">Área do aluno HPE</p>
+            <h1>Olá, {firstName}! Esse é o seu perfil.</h1>
+            <p>Mantenha seus dados atualizados para receber novidades dos próximos lançamentos.</p>
+          </div>
         </section>
 
         <section className="profile-details">
-          <article className="detail-item">
-            <h2>Nome</h2>
+          <article className="detail-item detail-item-emphasis">
+            <h2>Nome completo</h2>
             <p>{profile?.nome || "Não informado"}</p>
           </article>
           <article className="detail-item">
