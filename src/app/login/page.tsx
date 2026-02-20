@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
@@ -22,7 +22,6 @@ const loginHighlights = [
 
 export default function LoginPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -30,7 +29,8 @@ export default function LoginPage() {
 
 
   useEffect(() => {
-    const message = searchParams.get("error");
+    const message = new URLSearchParams(window.location.search).get("error");
+
     if (message) {
       setError(message);
       return;
@@ -39,7 +39,7 @@ export default function LoginPage() {
     if (firebaseInitError) {
       setError(firebaseInitError);
     }
-  }, [searchParams]);
+  }, []);
 
   useEffect(() => {
     if (!auth || !db) {
