@@ -8,7 +8,6 @@ import { auth, db } from "@/firebase/firebaseConfig";
 import "./page.css";
 
 type UserProfile = {
-  name?: string;
   email?: string;
 };
 
@@ -44,7 +43,6 @@ export default function VideosPage() {
 
         const data = profileDoc.data() as UserProfile;
         setProfile({
-          name: data.name,
           email: data.email || user.email || "",
         });
         setIsLoading(false);
@@ -96,9 +94,6 @@ export default function VideosPage() {
 
         <section className="profile-card" id="perfil-usuario">
           <h2>Perfil do usuário</h2>
-          <p>
-            <strong>Nome:</strong> {profile?.name || "Aluno HPE"}
-          </p>
           <p>
             <strong>E-mail:</strong> {profile?.email || "Não informado"}
           </p>

@@ -49,7 +49,6 @@ Exemplo de documento `users/{uid}`:
 
 ```json
 {
-  "name": "Nome do Aluno",
   "email": "aluno@email.com"
 }
 ```
