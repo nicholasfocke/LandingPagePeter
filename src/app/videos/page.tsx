@@ -23,18 +23,21 @@ export default function VideosPage() {
       return;
     }
 
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    const authClient = auth;
+    const dbClient = db;
+
+    const unsubscribe = onAuthStateChanged(authClient, async (user) => {
       if (!user) {
         router.replace("/login");
         return;
       }
 
       try {
-        const profileRef = doc(db, "users", user.uid);
+        const profileRef = doc(dbClient, "users", user.uid);
         const profileDoc = await getDoc(profileRef);
 
         if (!profileDoc.exists()) {
-          await signOut(auth);
+          await signOut(authClient);
           router.replace("/login");
           return;
         }
@@ -46,7 +49,7 @@ export default function VideosPage() {
         });
         setIsLoading(false);
       } catch {
-        await signOut(auth);
+        await signOut(authClient);
         router.replace(`/login?error=${encodeURIComponent("Sem permissão para ler users/{uid}.")}`);
       }
     });

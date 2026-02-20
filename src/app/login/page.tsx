@@ -46,17 +46,20 @@ export default function LoginPage() {
       return;
     }
 
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    const authClient = auth;
+    const dbClient = db;
+
+    const unsubscribe = onAuthStateChanged(authClient, async (user) => {
       if (!user) {
         return;
       }
 
       try {
-        const profileRef = doc(db, "users", user.uid);
+        const profileRef = doc(dbClient, "users", user.uid);
         const profileDoc = await getDoc(profileRef);
 
         if (!profileDoc.exists()) {
-          await signOut(auth);
+          await signOut(authClient);
           setError("Usuário autenticado, mas sem cadastro no banco (users/{uid}).");
           return;
         }
@@ -81,13 +84,16 @@ export default function LoginPage() {
       return;
     }
 
+    const authClient = auth;
+    const dbClient = db;
+
     try {
-      const credential = await signInWithEmailAndPassword(auth, email, password);
-      const profileRef = doc(db, "users", credential.user.uid);
+      const credential = await signInWithEmailAndPassword(authClient, email, password);
+      const profileRef = doc(dbClient, "users", credential.user.uid);
       const profileDoc = await getDoc(profileRef);
 
       if (!profileDoc.exists()) {
-        await signOut(auth);
+        await signOut(authClient);
         setError("Usuário autenticado, mas sem cadastro no banco (users/{uid}).");
         return;
       }
