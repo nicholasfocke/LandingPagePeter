@@ -53,6 +53,34 @@ Exemplo de documento `users/{uid}`:
 }
 ```
 
+
+## Configuração de e-mail (obrigatória para recuperação de senha)
+
+No Vercel, configure **uma** das opções abaixo:
+
+### Opção recomendada (SMTP de produção)
+
+```bash
+SMTP_HOST=
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=
+SMTP_PASS=
+SMTP_FROM_NAME=High Performance English
+SMTP_FROM_EMAIL=contato@seudominio.com
+```
+
+> Para portas 465, use `SMTP_SECURE=true`. Para 587, use `SMTP_SECURE=false`.
+
+### Opção alternativa (Gmail)
+
+```bash
+EMAIL_USER=seu-email@gmail.com
+EMAIL_PASS=sua-app-password
+```
+
+> No Gmail é obrigatório usar **App Password** (senha de app), não a senha normal da conta.
+
 ## Deploy
 
 No Vercel, configure as mesmas variáveis `NEXT_PUBLIC_FIREBASE_*` em **Project Settings > Environment Variables**.
