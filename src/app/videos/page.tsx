@@ -18,7 +18,7 @@ const upcomingVideos = [
   },
   { id: 3, title: "Perguntas inteligentes", status: "Disponível em breve", release: "Módulo 03" },
   { id: 4, title: "Análise de necessidades", status: "Disponível em breve", release: "Módulo 04" },
-  { id: 5, title: "Apresentar imóveis", status: "Disponível em breve", release: "Módulo 05" },
+  { id: 5, title: "Vocabulário Específico", status: "Disponível em breve", release: "Módulo 05" },
   {
     id: 6,
     title: "Apresentar imóveis e vocabulário no restaurante",
