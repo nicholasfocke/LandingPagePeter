@@ -1,216 +1,72 @@
 .videos-card {
-  gap: 40px;
-}
-
-.videos-hero {
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
   gap: 28px;
-  align-items: stretch;
 }
 
-.videos-hero-copy {
+.videos-top-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.videos-top-actions .secondary-link {
+  text-decoration: none;
+}
+
+.videos-top-actions .primary-button {
+  padding: 0 18px;
+}
+
+.videos-empty-state {
   background: linear-gradient(145deg, #0d1c3d, #1e3b83);
   border-radius: 28px;
-  padding: 36px;
+  padding: 40px;
   color: #ffffff;
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.videos-hero-copy h1 {
+.videos-empty-state .eyebrow {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.videos-empty-state h1 {
   margin: 0;
-  font-size: 34px;
-  line-height: 1.2;
+  font-size: 36px;
+  line-height: 1.25;
 }
 
-.videos-hero-copy p {
-  margin: 0;
-  color: rgba(255, 255, 255, 0.86);
-  font-size: 16px;
-  line-height: 1.65;
-}
-
-.videos-hero-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 4px;
-}
-
-.primary-link,
-.secondary-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px 18px;
-  border-radius: 12px;
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.primary-link {
-  background: #ffcc4d;
-  color: #0d1c3d;
-}
-
-.secondary-link {
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: #ffffff;
-}
-
-.stats-panel {
-  background: #f7f9ff;
-  border-radius: 28px;
-  padding: 28px;
-  border: 1px solid rgba(31, 60, 136, 0.14);
-  box-shadow: 0 20px 34px rgba(15, 23, 42, 0.08);
-}
-
-.stats-panel h2 {
-  margin: 0 0 16px;
-  font-size: 22px;
-  color: #0d1c3d;
-}
-
-.stats-panel ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.stats-panel li {
-  background-color: #ffffff;
-  border-radius: 14px;
-  padding: 14px;
-  border: 1px solid rgba(31, 60, 136, 0.12);
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.stats-panel span {
-  font-size: 13px;
-  color: #4a5877;
-}
-
-.stats-panel strong {
-  color: #1f3c88;
-  font-size: 18px;
-}
-
-.section-heading {
-  max-width: 760px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.section-heading h2 {
-  margin: 0;
-  font-size: 30px;
-  color: #0d1c3d;
-}
-
-.section-heading p {
-  margin: 0;
-  color: #4a5877;
-  line-height: 1.6;
-}
-
-.tracks-section,
-.video-library {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.tracks-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 20px;
-}
-
-.track-card {
-  background: #ffffff;
-  border-radius: 22px;
-  padding: 24px;
-  border: 1px solid rgba(31, 60, 136, 0.12);
-  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.track-card h3 {
-  margin: 0;
-  font-size: 20px;
-  color: #1f3c88;
-}
-
-.track-card p {
-  margin: 0;
-  font-size: 15px;
-  line-height: 1.6;
-  color: #4a5877;
-}
-
-.track-card ul {
-  margin: 0;
-  padding-left: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  color: #23345c;
-}
-
-.video-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 18px;
-}
-
-.video-card {
-  background: #0e1f43;
-  color: #ffffff;
+.profile-card {
+  background-color: #f7f9ff;
   border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 20px 36px rgba(13, 28, 61, 0.24);
+  padding: 24px;
+  border: 1px solid rgba(31, 60, 136, 0.14);
 }
 
-.video-card video {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  background: #091227;
+.profile-card h2 {
+  margin: 0 0 12px;
+  color: #0d1c3d;
 }
 
-.video-card h3 {
+.profile-card p {
   margin: 0;
-  padding: 16px;
-  font-size: 17px;
-  line-height: 1.4;
+  color: #23345c;
+  line-height: 1.7;
 }
 
-@media (max-width: 980px) {
-  .videos-hero {
-    grid-template-columns: 1fr;
-  }
+.loading-message {
+  margin: 0;
+  color: #0d1c3d;
+  font-weight: 600;
 }
 
-@media (max-width: 600px) {
-  .videos-hero-copy {
-    padding: 24px;
+@media (max-width: 720px) {
+  .videos-empty-state {
+    padding: 28px;
   }
 
-  .videos-hero-copy h1 {
+  .videos-empty-state h1 {
     font-size: 28px;
-  }
-
-  .section-heading h2 {
-    font-size: 26px;
   }
 }
