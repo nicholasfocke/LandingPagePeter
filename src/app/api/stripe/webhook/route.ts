@@ -6,6 +6,7 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { getFirebaseAdmin } from "@/lib/firebaseAdmin";
 import { sendCourseAccessEmail } from "@/lib/mailer";
+import { normalizeDigits } from "@/lib/purchaseValidation";
 import { stripe } from "@/lib/stripe";
 
 type SessionMetadata = {
@@ -25,8 +26,8 @@ async function handlePaidSession(session: Stripe.Checkout.Session) {
 
   const metadata = (session.metadata ?? {}) as SessionMetadata;
   const name = metadata.name?.trim() || email;
-  const cpf = metadata.cpf?.replace(/\D/g, "") ?? "";
-  const phone = metadata.phone?.replace(/\D/g, "") ?? "";
+  const cpf = normalizeDigits(metadata.cpf ?? "");
+  const phone = normalizeDigits(metadata.phone ?? "");
 
   const { auth, db, FieldValue } = getFirebaseAdmin();
   const paymentRef = db.collection("payments").doc(sessionId);
@@ -37,6 +38,7 @@ async function handlePaidSession(session: Stripe.Checkout.Session) {
     return;
   }
 
+  // Mantemos PII sensível (CPF) fora de payments; CPF é salvo apenas em users/{uid}.
   await paymentRef.set({
     checkoutSessionId: sessionId,
     paymentIntentId: typeof session.payment_intent === "string" ? session.payment_intent : null,
@@ -57,20 +59,25 @@ async function handlePaidSession(session: Stripe.Checkout.Session) {
     uid = createdUser.uid;
   }
 
-  await db.collection("users").doc(uid).set(
-    {
-      name,
-      email,
-      cpf,
-      phone,
-      isActive: true,
-      purchasedCourse: true,
-      stripeSessionId: sessionId,
-      createdAt: FieldValue.serverTimestamp(),
-      updatedAt: FieldValue.serverTimestamp(),
-    },
-    { merge: true }
-  );
+  const userPayload: Record<string, unknown> = {
+    name,
+    email,
+    isActive: true,
+    purchasedCourse: true,
+    stripeSessionId: sessionId,
+    createdAt: FieldValue.serverTimestamp(),
+    updatedAt: FieldValue.serverTimestamp(),
+  };
+
+  if (cpf) {
+    userPayload.cpf = cpf;
+  }
+
+  if (phone) {
+    userPayload.phone = phone;
+  }
+
+  await db.collection("users").doc(uid).set(userPayload, { merge: true });
 
   const token = crypto.randomBytes(32).toString("hex");
   const expiresAt = Date.now() + 60 * 60 * 1000;
