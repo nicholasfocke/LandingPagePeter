@@ -9,11 +9,22 @@ import { auth, db } from "@/firebase/firebaseConfig";
 import "./page.css";
 
 const upcomingVideos = [
-  { id: 1, title: "Apresentações de impacto", status: "Em breve", release: "Módulo 01" },
-  { id: 2, title: "Reuniões com confiança", status: "Em breve", release: "Módulo 02" },
-  { id: 3, title: "Negociação em inglês", status: "Em breve", release: "Módulo 03" },
-  { id: 4, title: "Liderança internacional", status: "Em breve", release: "Módulo 04" },
-  { id: 5, title: "Networking estratégico", status: "Em breve", release: "Módulo 05" },
+  { id: 1, title: "Introdução", status: "Disponível em breve", release: "Módulo 01" },
+  {
+    id: 2,
+    title: "Primeiro contato em inglês",
+    status: "Disponível em breve",
+    release: "Módulo 02",
+  },
+  { id: 3, title: "Perguntas inteligentes", status: "Disponível em breve", release: "Módulo 03" },
+  { id: 4, title: "Análise de necessidades", status: "Disponível em breve", release: "Módulo 04" },
+  { id: 5, title: "Apresentar imóveis", status: "Disponível em breve", release: "Módulo 05" },
+  {
+    id: 6,
+    title: "Apresentar imóveis e vocabulário no restaurante",
+    status: "Disponível em breve",
+    release: "Módulo 06",
+  },
 ];
 
 export default function VideosPage() {
@@ -93,11 +104,11 @@ export default function VideosPage() {
             <h1>Biblioteca em preparação para lançamento</h1>
             <p>
               Os conteúdos estão sendo finalizados para garantir uma experiência premium.
-              Os 5 primeiros módulos serão liberados em breve.
+              Os 6 primeiros módulos serão liberados em breve.
             </p>
           </div>
           <div className="videos-hero-badge">
-            <strong>5</strong>
+            <strong>6</strong>
             <span>vídeos programados</span>
           </div>
         </section>

@@ -8,10 +8,16 @@ import SiteHeader from "@/components/layout/SiteHeader";
 import "./page.css";
 
 const videoLibrary = [
-  { id: 1, status: "Disponível em breve" },
-  { id: 2, status: "Disponível em breve" },
-  { id: 3, status: "Disponível em breve" },
-  { id: 4, status: "Disponível em breve" },
+  { id: 1, title: "Introdução", status: "Disponível em breve" },
+  { id: 2, title: "Primeiro contato em inglês", status: "Disponível em breve" },
+  { id: 3, title: "Perguntas inteligentes", status: "Disponível em breve" },
+  { id: 4, title: "Análise de necessidades", status: "Disponível em breve" },
+  { id: 5, title: "Apresentar imóveis", status: "Disponível em breve" },
+  {
+    id: 6,
+    title: "Apresentar imóveis e vocabulário no restaurante",
+    status: "Disponível em breve",
+  },
 ];
 
 export default function Home() {
@@ -170,6 +176,7 @@ export default function Home() {
           <div className="videos-grid">
             {videoLibrary.map((video) => (
               <article className="video-card" key={video.id}>
+                <h3>{video.title}</h3>
                 <div className="video-chip">{video.status}</div>
               </article>
             ))}
