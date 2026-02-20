@@ -413,6 +413,23 @@
 
 .videos-section {
   gap: 36px;
+  background: linear-gradient(130deg, #0e1f46 0%, #1f3c88 58%, #2b4ea8 100%);
+  border-radius: 34px;
+  padding: 44px;
+  position: relative;
+  overflow: hidden;
+}
+
+.videos-section::after {
+  content: "";
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0));
+  right: -120px;
+  top: -140px;
+  pointer-events: none;
 }
 
 .videos-hero {
@@ -436,7 +453,7 @@
   margin: 0;
   font-size: 16px;
   line-height: 1.7;
-  color: #4a5877;
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .videos-actions {
@@ -446,15 +463,33 @@
   flex-wrap: wrap;
 }
 
+.videos-copy .eyebrow {
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.videos-copy .section-title {
+  color: #ffffff;
+}
+
+.videos-actions .text-link,
+.videos-actions .text-link:visited,
+.videos-actions .text-link:hover,
+.videos-actions .text-link:active,
+.videos-actions .text-link:focus-visible {
+  color: #ffffff;
+}
+
 .status-card {
-  background: linear-gradient(150deg, #0d1c3d, #1f3c88);
+  background: rgba(10, 27, 71, 0.75);
   color: #ffffff;
   border-radius: 22px;
-  padding: 24px;
-  box-shadow: 0 18px 36px rgba(13, 28, 61, 0.18);
+  padding: 28px;
+  box-shadow: 0 18px 36px rgba(13, 28, 61, 0.22);
   display: flex;
   flex-direction: column;
   gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(4px);
 }
 
 .status-card h3 {
@@ -487,27 +522,37 @@
 }
 
 .video-card {
-  background: #ffffff;
+  background: linear-gradient(165deg, #ffffff, #f8faff);
   border-radius: 20px;
   padding: 20px;
-  border: 1px solid rgba(31, 60, 136, 0.12);
-  box-shadow: 0 16px 28px rgba(15, 23, 42, 0.08);
+  border: 1px solid rgba(255, 204, 77, 0.38);
+  box-shadow: 0 16px 30px rgba(15, 23, 42, 0.12);
   display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   align-items: flex-start;
+  gap: 14px;
   min-height: 180px;
 }
 
+.video-card h3 {
+  margin: 0;
+  color: #1f3c88;
+  font-size: 20px;
+  line-height: 1.3;
+}
 
 .video-chip {
   display: inline-flex;
   align-self: flex-start;
   padding: 8px 12px;
   border-radius: 10px;
-  background-color: #f1f4ff;
-  color: #1f3c88;
+  background: linear-gradient(135deg, #ffcf59, #ffd978);
+  color: #172853;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.02em;
+  box-shadow: 0 10px 18px rgba(255, 204, 77, 0.28);
 }
 
 
@@ -749,6 +794,11 @@
 
   .videos-copy h2 {
     font-size: 28px;
+  }
+
+  .videos-section {
+    padding: 28px;
+    border-radius: 24px;
   }
 
   .status-card {

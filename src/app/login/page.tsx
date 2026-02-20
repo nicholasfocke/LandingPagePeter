@@ -27,7 +27,6 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-
   useEffect(() => {
     const message = new URLSearchParams(window.location.search).get("error");
 
