@@ -446,6 +446,18 @@
   flex-wrap: wrap;
 }
 
+.videos-copy .section-title {
+  color: #ffffff;
+}
+
+.videos-actions .text-link {
+  color: #ffffff;
+}
+
+.videos-actions .text-link:hover {
+  color: #ffffff;
+}
+
 .status-card {
   background: linear-gradient(150deg, #0d1c3d, #1f3c88);
   color: #ffffff;
