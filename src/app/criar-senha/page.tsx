@@ -9,6 +9,7 @@ export default function CreatePasswordPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [requestId, setRequestId] = useState("");
 
   const token = useMemo(() => {
     if (typeof window === "undefined") {
@@ -21,6 +22,7 @@ export default function CreatePasswordPage() {
     event.preventDefault();
     setError("");
     setSuccess("");
+    setRequestId("");
 
     if (!token) {
       setError("Token inválido ou ausente.");
@@ -46,12 +48,14 @@ export default function CreatePasswordPage() {
         body: JSON.stringify({ token, password }),
       });
 
-      const payload = (await response.json()) as { error?: string };
+      const payload = (await response.json()) as { error?: string; requestId?: string };
       if (!response.ok) {
         setError(payload.error ?? "Não foi possível definir a senha.");
+        setRequestId(payload.requestId ?? "");
         return;
       }
 
+      setRequestId(payload.requestId ?? "");
       setSuccess("Senha criada com sucesso! Agora faça login.");
       setPassword("");
       setConfirmPassword("");
@@ -96,7 +100,12 @@ export default function CreatePasswordPage() {
         </button>
       </form>
 
-      {error ? <p style={{ color: "#b91c1c" }}>{error}</p> : null}
+      {error ? (
+        <p style={{ color: "#b91c1c" }}>
+          {error}
+          {requestId ? <span> (código: {requestId})</span> : null}
+        </p>
+      ) : null}
       {success ? (
         <p style={{ color: "#047857" }}>
           {success} <Link href="/login">Ir para login</Link>

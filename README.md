@@ -113,3 +113,7 @@ curl -i -X POST https://SEU_DOMINIO/api/auth/forgot-password \
    - autenticação SMTP inválida (`535`, `EAUTH`)
    - `SMTP_PORT` inválida
    - remetente bloqueado pelo provedor (`from` não autorizado)
+
+6. Diagnóstico de redefinição de senha:
+   - A API `/api/auth/set-password` retorna `requestId` em sucesso/erro.
+   - Se falhar, copie o `código` exibido na tela e busque no Vercel Logs por `set-password][<requestId>]`.
