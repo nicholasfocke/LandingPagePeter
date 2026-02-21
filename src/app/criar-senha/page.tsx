@@ -27,8 +27,8 @@ export default function CreatePasswordPage() {
       return;
     }
 
-    if (password.length < 8) {
-      setError("A senha deve ter ao menos 8 caracteres.");
+    if (password.length < 8 || !/[A-Za-z]/.test(password) || !/\d/.test(password)) {
+      setError("A senha deve ter ao menos 8 caracteres, com letras e números.");
       return;
     }
 
@@ -66,6 +66,9 @@ export default function CreatePasswordPage() {
     <main style={{ maxWidth: 560, margin: "48px auto", padding: "0 20px" }}>
       <h1>Criar senha</h1>
       <p>Defina sua senha para acessar a área do aluno.</p>
+      <p style={{ marginTop: -8, color: "#4b5563", fontSize: 14 }}>
+        Use pelo menos 8 caracteres, com letras e números.
+      </p>
 
       <form onSubmit={handleSubmit} style={{ display: "grid", gap: 12 }}>
         <label htmlFor="password">Nova senha</label>

@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { getFirebaseAdmin } from "@/lib/firebaseAdmin";
 
 function isStrongPassword(password: string) {
-  return password.length >= 8;
+  return password.length >= 8 && /[A-Za-z]/.test(password) && /\d/.test(password);
 }
 
 export async function POST(request: Request) {
@@ -18,7 +18,10 @@ export async function POST(request: Request) {
     }
 
     if (!isStrongPassword(password)) {
-      return NextResponse.json({ error: "A senha deve ter ao menos 8 caracteres." }, { status: 400 });
+      return NextResponse.json(
+        { error: "A senha deve ter ao menos 8 caracteres, incluindo letras e números." },
+        { status: 400 }
+      );
     }
 
     const { auth, db, FieldValue } = getFirebaseAdmin();
@@ -30,22 +33,48 @@ export async function POST(request: Request) {
     }
 
     const tokenData = tokenDoc.data() as {
-      uid: string;
-      used: boolean;
-      expiresAt: number;
+      uid?: string;
+      used?: boolean;
+      expiresAt?: number | { toMillis?: () => number };
     };
 
-    if (tokenData.used) {
+    const uid = tokenData.uid?.trim();
+    const used = tokenData.used === true;
+    const expiresAt =
+      typeof tokenData.expiresAt === "number"
+        ? tokenData.expiresAt
+        : tokenData.expiresAt?.toMillis?.();
+
+    if (!uid || typeof expiresAt !== "number") {
+      return NextResponse.json({ error: "Token inválido." }, { status: 400 });
+    }
+
+    if (used) {
       return NextResponse.json({ error: "Token já utilizado." }, { status: 400 });
     }
 
-    if (Date.now() > tokenData.expiresAt) {
+    if (Date.now() > expiresAt) {
       return NextResponse.json({ error: "Token expirado." }, { status: 400 });
     }
 
-    await auth.updateUser(tokenData.uid, { password });
+    try {
+      await auth.updateUser(uid, { password });
+    } catch (error) {
+      const firebaseError = error as { code?: string };
+      if (
+        firebaseError.code === "auth/invalid-password" ||
+        firebaseError.code === "auth/password-does-not-meet-requirements"
+      ) {
+        return NextResponse.json(
+          { error: "A senha não atende aos requisitos de segurança do Firebase." },
+          { status: 400 }
+        );
+      }
 
-    await db.collection("users").doc(tokenData.uid).set(
+      throw error;
+    }
+
+    await db.collection("users").doc(uid).set(
       {
         updatedAt: FieldValue.serverTimestamp(),
         passwordUpdatedAt: FieldValue.serverTimestamp(),
@@ -62,7 +91,8 @@ export async function POST(request: Request) {
     );
 
     return NextResponse.json({ ok: true });
-  } catch {
+  } catch (error) {
+    console.error("[set-password] Falha ao definir senha:", error);
     return NextResponse.json({ error: "Falha ao definir senha." }, { status: 500 });
   }
 }
