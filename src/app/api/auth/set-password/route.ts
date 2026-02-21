@@ -7,6 +7,30 @@ function isStrongPassword(password: string) {
   return password.length >= 8 && /[A-Za-z]/.test(password) && /\d/.test(password);
 }
 
+function getPasswordUpdateErrorResponse(error: unknown) {
+  const firebaseError = error as { code?: string; message?: string };
+  const code = firebaseError.code ?? "";
+
+  if (code === "auth/user-not-found") {
+    return NextResponse.json({ error: "Usuário não encontrado para este token." }, { status: 400 });
+  }
+
+  if (
+    code === "auth/invalid-password" ||
+    code === "auth/password-does-not-meet-requirements" ||
+    code === "auth/password-too-short" ||
+    code === "auth/password-too-long" ||
+    code === "auth/invalid-argument"
+  ) {
+    return NextResponse.json(
+      { error: "A senha não atende aos requisitos de segurança do Firebase." },
+      { status: 400 }
+    );
+  }
+
+  return null;
+}
+
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as { token?: string; password?: string };
@@ -60,22 +84,9 @@ export async function POST(request: Request) {
     try {
       await auth.updateUser(uid, { password });
     } catch (error) {
-      const firebaseError = error as { code?: string };
-
-      if (firebaseError.code === "auth/user-not-found") {
-        return NextResponse.json({ error: "Usuário não encontrado para este token." }, { status: 400 });
-      }
-
-      if (
-        firebaseError.code === "auth/invalid-password" ||
-        firebaseError.code === "auth/password-does-not-meet-requirements" ||
-        firebaseError.code === "auth/password-too-short" ||
-        firebaseError.code === "auth/password-too-long"
-      ) {
-        return NextResponse.json(
-          { error: "A senha não atende aos requisitos de segurança do Firebase." },
-          { status: 400 }
-        );
+      const mappedResponse = getPasswordUpdateErrorResponse(error);
+      if (mappedResponse) {
+        return mappedResponse;
       }
 
       throw error;
@@ -108,6 +119,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true });
   } catch (error) {
     console.error("[set-password] Falha ao definir senha:", error);
-    return NextResponse.json({ error: "Falha ao definir senha." }, { status: 500 });
+    return NextResponse.json({ error: "Falha ao definir senha. Verifique os logs do servidor." }, { status: 500 });
   }
 }
