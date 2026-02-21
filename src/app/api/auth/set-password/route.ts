@@ -61,9 +61,16 @@ export async function POST(request: Request) {
       await auth.updateUser(uid, { password });
     } catch (error) {
       const firebaseError = error as { code?: string };
+
+      if (firebaseError.code === "auth/user-not-found") {
+        return NextResponse.json({ error: "Usuário não encontrado para este token." }, { status: 400 });
+      }
+
       if (
         firebaseError.code === "auth/invalid-password" ||
-        firebaseError.code === "auth/password-does-not-meet-requirements"
+        firebaseError.code === "auth/password-does-not-meet-requirements" ||
+        firebaseError.code === "auth/password-too-short" ||
+        firebaseError.code === "auth/password-too-long"
       ) {
         return NextResponse.json(
           { error: "A senha não atende aos requisitos de segurança do Firebase." },
@@ -74,21 +81,29 @@ export async function POST(request: Request) {
       throw error;
     }
 
-    await db.collection("users").doc(uid).set(
-      {
-        updatedAt: FieldValue.serverTimestamp(),
-        passwordUpdatedAt: FieldValue.serverTimestamp(),
-      },
-      { merge: true }
-    );
+    const updateResults = await Promise.allSettled([
+      db.collection("users").doc(uid).set(
+        {
+          updatedAt: FieldValue.serverTimestamp(),
+          passwordUpdatedAt: FieldValue.serverTimestamp(),
+        },
+        { merge: true }
+      ),
+      tokenRef.set(
+        {
+          used: true,
+          usedAt: FieldValue.serverTimestamp(),
+        },
+        { merge: true }
+      ),
+    ]);
 
-    await tokenRef.set(
-      {
-        used: true,
-        usedAt: FieldValue.serverTimestamp(),
-      },
-      { merge: true }
-    );
+    updateResults.forEach((result, index) => {
+      if (result.status === "rejected") {
+        const target = index === 0 ? "users" : "password_tokens";
+        console.error(`[set-password] Falha ao atualizar ${target}:`, result.reason);
+      }
+    });
 
     return NextResponse.json({ ok: true });
   } catch (error) {
