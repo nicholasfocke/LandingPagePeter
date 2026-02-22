@@ -9,6 +9,7 @@ export default function CreatePasswordPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [requestId, setRequestId] = useState("");
 
   const token = useMemo(() => {
     if (typeof window === "undefined") {
@@ -21,14 +22,15 @@ export default function CreatePasswordPage() {
     event.preventDefault();
     setError("");
     setSuccess("");
+    setRequestId("");
 
     if (!token) {
       setError("Token inválido ou ausente.");
       return;
     }
 
-    if (password.length < 8) {
-      setError("A senha deve ter ao menos 8 caracteres.");
+    if (password.length < 8 || !/[A-Za-z]/.test(password) || !/\d/.test(password)) {
+      setError("A senha deve ter ao menos 8 caracteres, com letras e números.");
       return;
     }
 
@@ -46,12 +48,14 @@ export default function CreatePasswordPage() {
         body: JSON.stringify({ token, password }),
       });
 
-      const payload = (await response.json()) as { error?: string };
+      const payload = (await response.json()) as { error?: string; requestId?: string };
       if (!response.ok) {
         setError(payload.error ?? "Não foi possível definir a senha.");
+        setRequestId(payload.requestId ?? "");
         return;
       }
 
+      setRequestId(payload.requestId ?? "");
       setSuccess("Senha criada com sucesso! Agora faça login.");
       setPassword("");
       setConfirmPassword("");
@@ -66,6 +70,9 @@ export default function CreatePasswordPage() {
     <main style={{ maxWidth: 560, margin: "48px auto", padding: "0 20px" }}>
       <h1>Criar senha</h1>
       <p>Defina sua senha para acessar a área do aluno.</p>
+      <p style={{ marginTop: -8, color: "#4b5563", fontSize: 14 }}>
+        Use pelo menos 8 caracteres, com letras e números.
+      </p>
 
       <form onSubmit={handleSubmit} style={{ display: "grid", gap: 12 }}>
         <label htmlFor="password">Nova senha</label>
@@ -93,7 +100,12 @@ export default function CreatePasswordPage() {
         </button>
       </form>
 
-      {error ? <p style={{ color: "#b91c1c" }}>{error}</p> : null}
+      {error ? (
+        <p style={{ color: "#b91c1c" }}>
+          {error}
+          {requestId ? <span> (código: {requestId})</span> : null}
+        </p>
+      ) : null}
       {success ? (
         <p style={{ color: "#047857" }}>
           {success} <Link href="/login">Ir para login</Link>

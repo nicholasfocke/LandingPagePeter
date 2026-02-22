@@ -1,19 +1,85 @@
-import nodemailer from "nodemailer";
+import nodemailer, { type Transporter } from "nodemailer";
 
-const emailUser = process.env.EMAIL_USER;
-const emailPass = process.env.EMAIL_PASS;
+type MailerConfig = {
+  transporter: Transporter;
+  from: string;
+};
 
-if (!emailUser || !emailPass) {
-  throw new Error("EMAIL_USER/EMAIL_PASS não configuradas.");
+let cachedMailerConfig: MailerConfig | null = null;
+
+function parseBoolean(value: string | undefined, fallback: boolean) {
+  if (!value) {
+    return fallback;
+  }
+
+  const normalized = value.trim().toLowerCase();
+  return normalized === "true" || normalized === "1" || normalized === "yes";
 }
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: emailUser,
-    pass: emailPass,
-  },
-});
+function getMailerConfig(): MailerConfig {
+  if (cachedMailerConfig) {
+    return cachedMailerConfig;
+  }
+
+  const smtpHost = process.env.SMTP_HOST;
+  const smtpPortRaw = process.env.SMTP_PORT;
+  const smtpUser = process.env.SMTP_USER;
+  const smtpPass = process.env.SMTP_PASS;
+  const smtpSecure = parseBoolean(process.env.SMTP_SECURE, true);
+
+  const gmailUser = process.env.EMAIL_USER;
+  const gmailPass = process.env.EMAIL_PASS;
+
+  const fromName = process.env.SMTP_FROM_NAME ?? "High Performance English";
+  const fromEmail = process.env.SMTP_FROM_EMAIL ?? smtpUser ?? gmailUser;
+
+  if (!fromEmail) {
+    throw new Error(
+      "Configuração de e-mail ausente. Defina SMTP_FROM_EMAIL ou SMTP_USER/EMAIL_USER."
+    );
+  }
+
+  if (smtpHost && smtpPortRaw && smtpUser && smtpPass) {
+    const smtpPort = Number(smtpPortRaw);
+    if (Number.isNaN(smtpPort)) {
+      throw new Error("SMTP_PORT inválida.");
+    }
+
+    cachedMailerConfig = {
+      transporter: nodemailer.createTransport({
+        host: smtpHost,
+        port: smtpPort,
+        secure: smtpSecure,
+        auth: {
+          user: smtpUser,
+          pass: smtpPass,
+        },
+      }),
+      from: `${fromName} <${fromEmail}>`,
+    };
+
+    return cachedMailerConfig;
+  }
+
+  if (gmailUser && gmailPass) {
+    cachedMailerConfig = {
+      transporter: nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: gmailUser,
+          pass: gmailPass,
+        },
+      }),
+      from: `${fromName} <${fromEmail}>`,
+    };
+
+    return cachedMailerConfig;
+  }
+
+  throw new Error(
+    "Nenhuma credencial de e-mail configurada. Defina SMTP_HOST/SMTP_PORT/SMTP_USER/SMTP_PASS ou EMAIL_USER/EMAIL_PASS."
+  );
+}
 
 type AccessEmailInput = {
   to: string;
@@ -21,7 +87,6 @@ type AccessEmailInput = {
   setPasswordUrl: string;
   loginUrl: string;
 };
-
 
 type PasswordResetEmailInput = {
   to: string;
@@ -34,8 +99,10 @@ export async function sendPasswordResetEmail({
   name,
   resetPasswordUrl,
 }: PasswordResetEmailInput) {
+  const { transporter, from } = getMailerConfig();
+
   await transporter.sendMail({
-    from: `High Performance English <${emailUser}>`,
+    from,
     to,
     subject: "Redefinir senha - High Performance English",
     html: `
@@ -60,8 +127,10 @@ export async function sendCourseAccessEmail({
   setPasswordUrl,
   loginUrl,
 }: AccessEmailInput) {
+  const { transporter, from } = getMailerConfig();
+
   await transporter.sendMail({
-    from: `High Performance English <${emailUser}>`,
+    from,
     to,
     subject: "Compra confirmada - Acesso ao curso",
     html: `

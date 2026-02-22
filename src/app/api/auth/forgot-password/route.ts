@@ -73,7 +73,8 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({ ok: true });
-  } catch {
+  } catch (error) {
+    console.error("[forgot-password] Falha ao enviar e-mail de redefinição:", error);
     return NextResponse.json({ error: "Não foi possível enviar o e-mail." }, { status: 500 });
   }
 }

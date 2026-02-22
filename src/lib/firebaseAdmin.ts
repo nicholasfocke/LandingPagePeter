@@ -1,23 +1,45 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-let cachedAdmin: any = null;
+import "server-only";
+import type { App } from "firebase-admin/app";
+import { cert, getApps, initializeApp } from "firebase-admin/app";
+import { getAuth } from "firebase-admin/auth";
+import { FieldValue, getFirestore } from "firebase-admin/firestore";
 
-function getFirebaseAdminJson() {
-  const raw = process.env.FIREBASE_ADMIN_JSON;
-  if (!raw) {
-    throw new Error("FIREBASE_ADMIN_JSON não configurada.");
+type FirebaseAdminInstance = {
+  auth: ReturnType<typeof getAuth>;
+  db: ReturnType<typeof getFirestore>;
+  FieldValue: typeof FieldValue;
+};
+
+let cachedAdmin: FirebaseAdminInstance | null = null;
+
+function getServiceAccount() {
+  const projectId = process.env.FIREBASE_PROJECT_ID;
+  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+  const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+
+  if (!projectId || !clientEmail || !privateKey) {
+    throw new Error(
+      "Variáveis do Firebase Admin não configuradas corretamente: FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL ou FIREBASE_PRIVATE_KEY."
+    );
   }
 
-  try {
-    return JSON.parse(raw);
-  } catch {
-    throw new Error("FIREBASE_ADMIN_JSON inválida.");
-  }
+  return {
+    projectId,
+    clientEmail,
+    privateKey,
+  };
 }
 
-function runtimeRequire(moduleName: string) {
-  // Evita inclusão acidental de SDK Admin no client bundle.
-  const req = eval("require");
-  return req(moduleName);
+function getOrCreateAdminApp() {
+  const apps = getApps();
+
+  if (apps.length > 0) {
+    return apps[0] as App;
+  }
+
+  return initializeApp({
+    credential: cert(getServiceAccount()),
+  });
 }
 
 export function getFirebaseAdmin() {
@@ -25,20 +47,7 @@ export function getFirebaseAdmin() {
     return cachedAdmin;
   }
 
-  const adminAppModule = runtimeRequire("firebase-admin/app");
-  const adminAuthModule = runtimeRequire("firebase-admin/auth");
-  const adminFirestoreModule = runtimeRequire("firebase-admin/firestore");
-
-  const { getApps, cert, initializeApp } = adminAppModule;
-  const { getAuth } = adminAuthModule;
-  const { getFirestore, FieldValue } = adminFirestoreModule;
-
-  const firebaseAdminJson = getFirebaseAdminJson();
-  const app = getApps().length
-    ? getApps()[0]
-    : initializeApp({
-        credential: cert(firebaseAdminJson),
-      });
+  const app = getOrCreateAdminApp();
 
   cachedAdmin = {
     auth: getAuth(app),
