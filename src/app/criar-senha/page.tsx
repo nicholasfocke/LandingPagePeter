@@ -6,6 +6,8 @@ import { FormEvent, useMemo, useState } from "react";
 export default function CreatePasswordPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -76,24 +78,70 @@ export default function CreatePasswordPage() {
 
       <form onSubmit={handleSubmit} style={{ display: "grid", gap: 12 }}>
         <label htmlFor="password">Nova senha</label>
-        <input
-          id="password"
-          type="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          required
-          minLength={8}
-        />
+        <div style={{ position: "relative" }}>
+          <input
+            id="password"
+            type={isPasswordVisible ? "text" : "password"}
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            required
+            minLength={8}
+            style={{ width: "100%", paddingRight: 44 }}
+          />
+          <button
+            type="button"
+            onClick={() => setIsPasswordVisible((current) => !current)}
+            aria-label={isPasswordVisible ? "Ocultar senha" : "Mostrar senha"}
+            aria-pressed={isPasswordVisible}
+            style={{
+              position: "absolute",
+              right: 10,
+              top: "50%",
+              transform: "translateY(-50%)",
+              border: "none",
+              background: "transparent",
+              cursor: "pointer",
+              fontSize: 18,
+              lineHeight: 1,
+              padding: 0,
+            }}
+          >
+            {isPasswordVisible ? "🙈" : "👁️"}
+          </button>
+        </div>
 
         <label htmlFor="confirmPassword">Confirmar senha</label>
-        <input
-          id="confirmPassword"
-          type="password"
-          value={confirmPassword}
-          onChange={(event) => setConfirmPassword(event.target.value)}
-          required
-          minLength={8}
-        />
+        <div style={{ position: "relative" }}>
+          <input
+            id="confirmPassword"
+            type={isConfirmPasswordVisible ? "text" : "password"}
+            value={confirmPassword}
+            onChange={(event) => setConfirmPassword(event.target.value)}
+            required
+            minLength={8}
+            style={{ width: "100%", paddingRight: 44 }}
+          />
+          <button
+            type="button"
+            onClick={() => setIsConfirmPasswordVisible((current) => !current)}
+            aria-label={isConfirmPasswordVisible ? "Ocultar senha" : "Mostrar senha"}
+            aria-pressed={isConfirmPasswordVisible}
+            style={{
+              position: "absolute",
+              right: 10,
+              top: "50%",
+              transform: "translateY(-50%)",
+              border: "none",
+              background: "transparent",
+              cursor: "pointer",
+              fontSize: 18,
+              lineHeight: 1,
+              padding: 0,
+            }}
+          >
+            {isConfirmPasswordVisible ? "🙈" : "👁️"}
+          </button>
+        </div>
 
         <button type="submit" disabled={isLoading}>
           {isLoading ? "Salvando..." : "Salvar senha"}

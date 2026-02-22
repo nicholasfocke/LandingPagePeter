@@ -10,6 +10,7 @@ import "./page.css";
 
 type UserProfile = {
   email?: string;
+  name?: string;
   nome?: string;
   fullName?: string;
   phone?: string;
@@ -19,16 +20,20 @@ export default function PerfilPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [uid, setUid] = useState("");
+
+  const fullName = useMemo(() => {
+    const rawName = (profile?.name || profile?.nome || profile?.fullName || "").trim();
+    return rawName;
+  }, [profile?.fullName, profile?.name, profile?.nome]);
 
   const firstName = useMemo(() => {
-    const rawName = profile?.nome?.trim();
+    const rawName = fullName;
     if (!rawName) {
       return "Aluno";
     }
 
     return rawName.split(" ")[0];
-  }, [profile?.nome]);
+  }, [fullName]);
 
   useEffect(() => {
     if (!auth || !db) {
@@ -59,10 +64,11 @@ export default function PerfilPage() {
 
         setProfile({
           email: data.email || user.email || "",
-          nome: data.nome || data.fullName || "",
+          name: data.name || "",
+          nome: data.nome || "",
+          fullName: data.fullName || "",
           phone: data.phone || "",
         });
-        setUid(user.uid);
         setIsLoading(false);
       } catch {
         await signOut(authClient);
@@ -117,7 +123,7 @@ export default function PerfilPage() {
         <section className="profile-details">
           <article className="detail-item detail-item-emphasis">
             <h2>Nome completo</h2>
-            <p>{profile?.nome || "Não informado"}</p>
+            <p>{fullName || "Não informado"}</p>
           </article>
           <article className="detail-item">
             <h2>E-mail</h2>
@@ -126,10 +132,6 @@ export default function PerfilPage() {
           <article className="detail-item">
             <h2>Telefone</h2>
             <p>{profile?.phone || "Não informado"}</p>
-          </article>
-          <article className="detail-item">
-            <h2>ID do usuário</h2>
-            <p>{uid || "Não informado"}</p>
           </article>
         </section>
       </main>
