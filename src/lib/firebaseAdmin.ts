@@ -12,27 +12,33 @@ type FirebaseAdminInstance = {
 
 let cachedAdmin: FirebaseAdminInstance | null = null;
 
-function getFirebaseAdminJson() {
-  const raw = process.env.FIREBASE_ADMIN_JSON;
-  if (!raw) {
-    throw new Error("FIREBASE_ADMIN_JSON não configurada.");
+function getServiceAccount() {
+  const projectId = process.env.FIREBASE_PROJECT_ID;
+  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+  const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+
+  if (!projectId || !clientEmail || !privateKey) {
+    throw new Error(
+      "Variáveis do Firebase Admin não configuradas corretamente: FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL ou FIREBASE_PRIVATE_KEY."
+    );
   }
 
-  try {
-    return JSON.parse(raw);
-  } catch {
-    throw new Error("FIREBASE_ADMIN_JSON inválida.");
-  }
+  return {
+    projectId,
+    clientEmail,
+    privateKey,
+  };
 }
 
 function getOrCreateAdminApp() {
   const apps = getApps();
+
   if (apps.length > 0) {
     return apps[0] as App;
   }
 
   return initializeApp({
-    credential: cert(getFirebaseAdminJson()),
+    credential: cert(getServiceAccount()),
   });
 }
 
