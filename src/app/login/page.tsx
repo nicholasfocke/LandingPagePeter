@@ -25,6 +25,7 @@ export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
@@ -151,7 +152,7 @@ export default function LoginPage() {
   return (
     <div className="page">
       <main className="card login-card">
-        <SiteHeader />
+        <SiteHeader onPurchaseClick={() => setIsPurchaseModalOpen(true)} />
 
         <section className="login-hero">
           <div className="login-copy">
@@ -196,16 +197,27 @@ export default function LoginPage() {
             </div>
             <div className="form-field">
               <label htmlFor="password">Senha</label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="Digite sua senha"
-                autoComplete="current-password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                required
-              />
+              <div className="password-input-wrapper">
+                <input
+                  id="password"
+                  name="password"
+                  type={isPasswordVisible ? "text" : "password"}
+                  placeholder="Digite sua senha"
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  required
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setIsPasswordVisible((current) => !current)}
+                  aria-label={isPasswordVisible ? "Ocultar senha" : "Mostrar senha"}
+                  aria-pressed={isPasswordVisible}
+                >
+                  {isPasswordVisible ? "🙈" : "👁️"}
+                </button>
+              </div>
             </div>
             <button className="primary-button" type="submit" disabled={isLoading}>
               {isLoading ? "Entrando..." : "Acessar área do aluno"}
