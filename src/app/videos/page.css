@@ -76,7 +76,7 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 20px;
   padding: 22px 24px;
-  min-width: 170px;
+  min-width: 190px;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -95,7 +95,7 @@
 
 .videos-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 24px;
 }
 
@@ -108,7 +108,7 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
-  min-height: 212px;
+  min-height: 430px;
   transition: transform 0.24s ease, box-shadow 0.24s ease;
 }
 
@@ -161,6 +161,83 @@
   box-shadow: 0 10px 18px rgba(255, 204, 77, 0.28);
 }
 
+.video-progress-section {
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.video-progress-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: center;
+  color: #1f3060;
+}
+
+.video-progress-header strong {
+  font-size: 14px;
+}
+
+.video-progress-header span {
+  font-size: 13px;
+  color: #4e5e83;
+}
+
+.video-progress-section input[type="range"] {
+  width: 100%;
+}
+
+.video-notes-section {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.video-notes-section label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1f3c88;
+}
+
+.video-notes-section textarea {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(31, 60, 136, 0.2);
+  padding: 10px 12px;
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+  min-height: 96px;
+}
+
+.video-notes-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.video-notes-actions small {
+  color: #4e5e83;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.video-notes-actions .secondary-link {
+  border: 0;
+  cursor: pointer;
+}
+
+.notes-save-feedback {
+  margin: 0;
+  font-size: 12px;
+  color: #1f3c88;
+  font-weight: 600;
+}
+
 .loading-message {
   margin: 0;
   color: #0d1c3d;
@@ -198,5 +275,10 @@
 
   .video-card h2 {
     font-size: 23px;
+  }
+
+  .video-notes-actions {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

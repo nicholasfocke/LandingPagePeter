@@ -6,6 +6,8 @@ import { FormEvent, useMemo, useState } from "react";
 export default function CreatePasswordPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -76,24 +78,92 @@ export default function CreatePasswordPage() {
 
       <form onSubmit={handleSubmit} style={{ display: "grid", gap: 12 }}>
         <label htmlFor="password">Nova senha</label>
-        <input
-          id="password"
-          type="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          required
-          minLength={8}
-        />
+        <div style={{ position: "relative" }}>
+          <input
+            id="password"
+            type={isPasswordVisible ? "text" : "password"}
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            required
+            minLength={8}
+            style={{ width: "100%", paddingRight: 44 }}
+          />
+          <button
+            type="button"
+            onClick={() => setIsPasswordVisible((current) => !current)}
+            aria-label={isPasswordVisible ? "Ocultar senha" : "Mostrar senha"}
+            aria-pressed={isPasswordVisible}
+            style={{
+              position: "absolute",
+              right: 10,
+              top: "50%",
+              transform: "translateY(-50%)",
+              border: "none",
+              background: "transparent",
+              cursor: "pointer",
+              fontSize: 18,
+              lineHeight: 1,
+              padding: 0,
+              color: "#4b5563",
+            }}
+          >
+            {isPasswordVisible ? (
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" style={{ width: 18, height: 18, display: "block" }}>
+                <path d="M3.27 2 2 3.27l3 3A11.86 11.86 0 0 0 1 12s4 7 11 7a10.9 10.9 0 0 0 4.23-.85L20.73 22 22 20.73 3.27 2Zm8.01 8.01 2.71 2.71A3 3 0 0 1 11.28 10Zm-2.56.18A3 3 0 0 0 13.81 15Z" fill="currentColor" />
+                <path d="M12 5a10.8 10.8 0 0 1 11 7 12.6 12.6 0 0 1-2.65 3.36l-1.42-1.42A9.1 9.1 0 0 0 20.78 12 8.92 8.92 0 0 0 12 7.06a9.1 9.1 0 0 0-2.27.29L8.11 5.73A11.2 11.2 0 0 1 12 5Z" fill="currentColor" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" style={{ width: 18, height: 18, display: "block" }}>
+                <path d="M12 5a10.8 10.8 0 0 1 11 7 10.8 10.8 0 0 1-11 7A10.8 10.8 0 0 1 1 12 10.8 10.8 0 0 1 12 5Zm0 2.06A8.92 8.92 0 0 0 3.22 12 8.92 8.92 0 0 0 12 16.94 8.92 8.92 0 0 0 20.78 12 8.92 8.92 0 0 0 12 7.06Z" fill="currentColor" />
+                <path d="M12 8.5A3.5 3.5 0 1 1 8.5 12 3.5 3.5 0 0 1 12 8.5Zm0 2A1.5 1.5 0 1 0 13.5 12 1.5 1.5 0 0 0 12 10.5Z" fill="currentColor" />
+              </svg>
+            )}
+          </button>
+        </div>
 
         <label htmlFor="confirmPassword">Confirmar senha</label>
-        <input
-          id="confirmPassword"
-          type="password"
-          value={confirmPassword}
-          onChange={(event) => setConfirmPassword(event.target.value)}
-          required
-          minLength={8}
-        />
+        <div style={{ position: "relative" }}>
+          <input
+            id="confirmPassword"
+            type={isConfirmPasswordVisible ? "text" : "password"}
+            value={confirmPassword}
+            onChange={(event) => setConfirmPassword(event.target.value)}
+            required
+            minLength={8}
+            style={{ width: "100%", paddingRight: 44 }}
+          />
+          <button
+            type="button"
+            onClick={() => setIsConfirmPasswordVisible((current) => !current)}
+            aria-label={isConfirmPasswordVisible ? "Ocultar senha" : "Mostrar senha"}
+            aria-pressed={isConfirmPasswordVisible}
+            style={{
+              position: "absolute",
+              right: 10,
+              top: "50%",
+              transform: "translateY(-50%)",
+              border: "none",
+              background: "transparent",
+              cursor: "pointer",
+              fontSize: 18,
+              lineHeight: 1,
+              padding: 0,
+              color: "#4b5563",
+            }}
+          >
+            {isConfirmPasswordVisible ? (
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" style={{ width: 18, height: 18, display: "block" }}>
+                <path d="M3.27 2 2 3.27l3 3A11.86 11.86 0 0 0 1 12s4 7 11 7a10.9 10.9 0 0 0 4.23-.85L20.73 22 22 20.73 3.27 2Zm8.01 8.01 2.71 2.71A3 3 0 0 1 11.28 10Zm-2.56.18A3 3 0 0 0 13.81 15Z" fill="currentColor" />
+                <path d="M12 5a10.8 10.8 0 0 1 11 7 12.6 12.6 0 0 1-2.65 3.36l-1.42-1.42A9.1 9.1 0 0 0 20.78 12 8.92 8.92 0 0 0 12 7.06a9.1 9.1 0 0 0-2.27.29L8.11 5.73A11.2 11.2 0 0 1 12 5Z" fill="currentColor" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" style={{ width: 18, height: 18, display: "block" }}>
+                <path d="M12 5a10.8 10.8 0 0 1 11 7 10.8 10.8 0 0 1-11 7A10.8 10.8 0 0 1 1 12 10.8 10.8 0 0 1 12 5Zm0 2.06A8.92 8.92 0 0 0 3.22 12 8.92 8.92 0 0 0 12 16.94 8.92 8.92 0 0 0 20.78 12 8.92 8.92 0 0 0 12 7.06Z" fill="currentColor" />
+                <path d="M12 8.5A3.5 3.5 0 1 1 8.5 12 3.5 3.5 0 0 1 12 8.5Zm0 2A1.5 1.5 0 1 0 13.5 12 1.5 1.5 0 0 0 12 10.5Z" fill="currentColor" />
+              </svg>
+            )}
+          </button>
+        </div>
 
         <button type="submit" disabled={isLoading}>
           {isLoading ? "Salvando..." : "Salvar senha"}

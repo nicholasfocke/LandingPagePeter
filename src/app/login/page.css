@@ -76,6 +76,39 @@
   font-family: inherit;
 }
 
+
+.password-input-wrapper {
+  position: relative;
+}
+
+.password-input-wrapper input {
+  width: 100%;
+  padding-right: 46px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  color: #4a5877;
+}
+
+.password-toggle:hover {
+  color: #1f3c88;
+}
+
+.password-toggle-icon {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
 .form-note {
   margin: 0;
   font-size: 13px;
