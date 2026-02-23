@@ -4,14 +4,9 @@ import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 import PurchaseModal from "@/components/checkout/PurchaseModal";
 import { useRouter } from "next/navigation";
-import {
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signOut,
-} from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import SiteHeader from "@/components/layout/SiteHeader";
-import { auth, db, firebaseInitError } from "@/firebase/firebaseConfig";
+import { auth, firebaseInitError } from "@/firebase/firebaseConfig";
 import { getFirebaseMessage } from "@/firebase/firebaseErrors";
 import "./page.css";
 
@@ -49,32 +44,18 @@ export default function LoginPage() {
   }, []);
 
   useEffect(() => {
-    if (!auth || !db) {
+    if (!auth) {
       return;
     }
 
     const authClient = auth;
-    const dbClient = db;
 
-    const unsubscribe = onAuthStateChanged(authClient, async (user) => {
+    const unsubscribe = onAuthStateChanged(authClient, (user) => {
       if (!user) {
         return;
       }
 
-      try {
-        const profileRef = doc(dbClient, "users", user.uid);
-        const profileDoc = await getDoc(profileRef);
-
-        if (!profileDoc.exists()) {
-          await signOut(authClient);
-          setError("Usuário autenticado, mas sem cadastro no banco (users/{uid}).");
-          return;
-        }
-
-        router.replace("/videos");
-      } catch (firebaseError) {
-        setError(getFirebaseMessage(firebaseError));
-      }
+      router.replace("/videos");
     });
 
     return () => unsubscribe();
@@ -85,26 +66,16 @@ export default function LoginPage() {
     setError("");
     setIsLoading(true);
 
-    if (!auth || !db) {
+    if (!auth) {
       setError(firebaseInitError || "Firebase indisponível no momento.");
       setIsLoading(false);
       return;
     }
 
     const authClient = auth;
-    const dbClient = db;
 
     try {
-      const credential = await signInWithEmailAndPassword(authClient, email, password);
-      const profileRef = doc(dbClient, "users", credential.user.uid);
-      const profileDoc = await getDoc(profileRef);
-
-      if (!profileDoc.exists()) {
-        await signOut(authClient);
-        setError("Usuário autenticado, mas sem cadastro no banco (users/{uid}).");
-        return;
-      }
-
+      await signInWithEmailAndPassword(authClient, email, password);
       router.replace("/videos");
     } catch (firebaseError) {
       setError(getFirebaseMessage(firebaseError));

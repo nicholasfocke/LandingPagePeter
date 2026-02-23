@@ -50,13 +50,20 @@ export default function PerfilPage() {
         return;
       }
 
+      const fallbackProfile: UserProfile = {
+        email: user.email || "",
+        name: user.displayName || "",
+        nome: "",
+        fullName: "",
+        phone: "",
+      };
+
       try {
         const profileRef = doc(dbClient, "users", user.uid);
         const profileDoc = await getDoc(profileRef);
 
         if (!profileDoc.exists()) {
-          await signOut(authClient);
-          router.replace("/login");
+          setProfile(fallbackProfile);
           return;
         }
 
@@ -64,15 +71,15 @@ export default function PerfilPage() {
 
         setProfile({
           email: data.email || user.email || "",
-          name: data.name || "",
+          name: data.name || user.displayName || "",
           nome: data.nome || "",
           fullName: data.fullName || "",
           phone: data.phone || "",
         });
-        setIsLoading(false);
       } catch {
-        await signOut(authClient);
-        router.replace(`/login?error=${encodeURIComponent("Sem permissão para ler users/{uid}.")}`);
+        setProfile(fallbackProfile);
+      } finally {
+        setIsLoading(false);
       }
     });
 

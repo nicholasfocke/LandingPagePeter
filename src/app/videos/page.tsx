@@ -7,7 +7,6 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import {
   collection,
   doc,
-  getDoc,
   getDocs,
   serverTimestamp,
   setDoc,
@@ -110,15 +109,6 @@ export default function VideosPage() {
       }
 
       try {
-        const profileRef = doc(dbClient, "users", user.uid);
-        const profileDoc = await getDoc(profileRef);
-
-        if (!profileDoc.exists()) {
-          await signOut(authClient);
-          router.replace("/login");
-          return;
-        }
-
         setUid(user.uid);
 
         const progressCollection = collection(dbClient, "users", user.uid, "video_progress");
@@ -138,10 +128,10 @@ export default function VideosPage() {
         });
 
         setProgressByVideo(nextProgress);
-        setIsLoading(false);
       } catch {
-        await signOut(authClient);
-        router.replace(`/login?error=${encodeURIComponent("Sem permissão para ler users/{uid}.")}`);
+        setProgressByVideo(getInitialProgressState());
+      } finally {
+        setIsLoading(false);
       }
     });
 
