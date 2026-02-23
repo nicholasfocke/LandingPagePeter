@@ -215,7 +215,39 @@ export default function LoginPage() {
                   aria-label={isPasswordVisible ? "Ocultar senha" : "Mostrar senha"}
                   aria-pressed={isPasswordVisible}
                 >
-                  {isPasswordVisible ? "🙈" : "👁️"}
+                  {isPasswordVisible ? (
+                    <svg
+                      className="password-toggle-icon"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                      focusable="false"
+                    >
+                      <path
+                        d="M3.27 2 2 3.27l3 3A11.86 11.86 0 0 0 1 12s4 7 11 7a10.9 10.9 0 0 0 4.23-.85L20.73 22 22 20.73 3.27 2Zm8.01 8.01 2.71 2.71A3 3 0 0 1 11.28 10Zm-2.56.18A3 3 0 0 0 13.81 15Z"
+                        fill="currentColor"
+                      />
+                      <path
+                        d="M12 5a10.8 10.8 0 0 1 11 7 12.6 12.6 0 0 1-2.65 3.36l-1.42-1.42A9.1 9.1 0 0 0 20.78 12 8.92 8.92 0 0 0 12 7.06a9.1 9.1 0 0 0-2.27.29L8.11 5.73A11.2 11.2 0 0 1 12 5Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  ) : (
+                    <svg
+                      className="password-toggle-icon"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                      focusable="false"
+                    >
+                      <path
+                        d="M12 5a10.8 10.8 0 0 1 11 7 10.8 10.8 0 0 1-11 7A10.8 10.8 0 0 1 1 12 10.8 10.8 0 0 1 12 5Zm0 2.06A8.92 8.92 0 0 0 3.22 12 8.92 8.92 0 0 0 12 16.94 8.92 8.92 0 0 0 20.78 12 8.92 8.92 0 0 0 12 7.06Z"
+                        fill="currentColor"
+                      />
+                      <path
+                        d="M12 8.5A3.5 3.5 0 1 1 8.5 12 3.5 3.5 0 0 1 12 8.5Zm0 2A1.5 1.5 0 1 0 13.5 12 1.5 1.5 0 0 0 12 10.5Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  )}
                 </button>
               </div>
             </div>
