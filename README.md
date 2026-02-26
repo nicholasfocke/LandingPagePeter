@@ -117,3 +117,5 @@ curl -i -X POST https://SEU_DOMINIO/api/auth/forgot-password \
 6. Diagnóstico de redefinição de senha:
    - A API `/api/auth/set-password` retorna `requestId` em sucesso/erro.
    - Se falhar, copie o `código` exibido na tela e busque no Vercel Logs por `set-password][<requestId>]`.
+
+.
