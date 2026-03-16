@@ -9,15 +9,85 @@ import PurchaseModal from "@/components/checkout/PurchaseModal";
 import "./page.css";
 
 const videoLibrary = [
-  { id: 1, title: "Introdução", status: "Disponível em breve" },
-  { id: 2, title: "Primeiro contato em inglês", status: "Disponível em breve" },
-  { id: 3, title: "Perguntas inteligentes", status: "Disponível em breve" },
-  { id: 4, title: "Análise de necessidades", status: "Disponível em breve" },
-  { id: 5, title: "Vocabulário Específico", status: "Disponível em breve" },
+  {
+    id: 1,
+    title: "primeiro contato em ingl\u00eas",
+    file: "primeiro contato em ingl\u00eas.mp4",
+    url: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/primeiro%20contato%20em%20ingl%C3%AAs.mp4?alt=media&token=766619f0-f1bf-4682-8e95-e6a23c75a6cf",
+    materialUrl: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/PRIMEIRO%20CONTATO%20EM%20INGL%C3%8AS.pdf?alt=media&token=ef28baba-81e0-464c-927d-6607bc2bb4da",
+    status: "j\u00e1 dispon\u00edvel",
+  },
+  {
+    id: 2,
+    title: "perguntas inteligentes",
+    file: "perguntas inteligentes.mp4",
+    url: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/perguntas%20inteligentes.mp4?alt=media&token=43c85598-767a-4cb1-967e-780669dd80bc",
+    materialUrl: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/PERGUNTAS%20INTELIGENTES.pdf?alt=media&token=207d142d-b624-43e1-890c-bd8b012a1e01",
+    status: "j\u00e1 dispon\u00edvel",
+  },
+  {
+    id: 3,
+    title: "an\u00e1lise de necessidades",
+    file: "an\u00e1lise de necessidades.mp4",
+    url: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/an%C3%A1lise%20de%20necessidades.mp4?alt=media&token=3e73e0d9-0261-40bb-99b2-7b4bdffd5a81",
+    materialUrl: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/AN%C3%81LISE%20DE%20NECESSIDADES.pdf?alt=media&token=f2c500ec-098a-403f-b9a4-514e4f68f1a6",
+    status: "j\u00e1 dispon\u00edvel",
+  },
+  {
+    id: 4,
+    title: "vocabul\u00e1rio espec\u00edfico",
+    file: "vocabul\u00e1rio espec\u00edfico.mp4",
+    url: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/vocabul%C3%A1rio%20espec%C3%ADfico.mp4?alt=media&token=22e02c47-eb23-4f95-abd0-c2117492483c",
+    materialUrl: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/VOCABUL%C3%81RIO%20ESPEC%C3%8DFICO.pdf?alt=media&token=e8a06ba4-cd8b-40bd-b751-61c94251e5ab",
+    status: "j\u00e1 dispon\u00edvel",
+  },
+  {
+    id: 5,
+    title: "apresentar im\u00f3veis e vocabul\u00e1rio no restauranre",
+    file: "apresentar im\u00f3veis e vocabul\u00e1rio no restauranre.mp4",
+    url: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/apresentar%20im%C3%B3veis%20e%20vocabul%C3%A1rio%20no%20restauranre.mp4?alt=media&token=3ac9e9f8-004f-4356-a127-303af09868d3",
+    materialUrl: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/APRESENTAR%20IM%C3%93VEIS%20E%20VOCABUL%C3%81RIO%20NO%20RESTAURANTE.pdf?alt=media&token=c40dc003-eccb-43d8-8816-8dd29f7f3e95",
+    status: "j\u00e1 dispon\u00edvel",
+  },
   {
     id: 6,
-    title: "Apresentar imóveis e vocabulário no restaurante",
-    status: "Disponível em breve",
+    title: "bonus primeiro contato em ingl\u00eas",
+    file: "bonus primeiro contato em ingl\u00eas.mp4",
+    url: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/bonus%20primeiro%20contato%20em%20ingl%C3%AAs.mp4?alt=media&token=454f3c7e-3375-4bff-a41c-a3288630733f",
+    materialUrl: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/BONUS%20-%20PRIMEIRO%20CONTATO%20EM%20INGL%C3%8AS.pdf?alt=media&token=4e7c3445-bf8e-47f9-94e0-1c82e86d4974",
+    status: "j\u00e1 dispon\u00edvel",
+  },
+  {
+    id: 7,
+    title: "bonus perguntas inteligentes",
+    file: "bonus perguntas inteligentes.mp4",
+    url: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/bonus%20perguntas%20inteligentes.mp4?alt=media&token=074765d0-08dd-458e-90bc-571396bb4dd8",
+    materialUrl: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/BONUS%20-%20PERGUNTAS%20INTELIGENTES.pdf?alt=media&token=767c4ea2-36f4-42a6-817d-bf9b1dae2c85",
+    status: "j\u00e1 dispon\u00edvel",
+  },
+  {
+    id: 8,
+    title: "bonus an\u00e1lise de necessidades",
+    file: "bonus an\u00e1lise de necessidades.mp4",
+    url: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/bonus%20an%C3%A1lise%20de%20necessidades.mp4?alt=media&token=fe5e7ae3-e5e1-473c-8b54-24ea95bac650",
+    materialUrl: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/BONUS%20-%20AN%C3%81LISE%20DE%20NECESSIDADES.pdf?alt=media&token=9cba0794-ec9d-4190-aebb-4e9a45b5f238",
+    status: "j\u00e1 dispon\u00edvel",
+  },
+  {
+    id: 9,
+    title: "bonus vocabul\u00e3rio espec\u00edfico",
+    file: "bonus vocabul\u00e3rio espec\u00edfico.mp4",
+    url: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/bonus%20vocabul%C3%A3rio%20espec%C3%ADfico.mp4?alt=media&token=23e96123-3620-4c28-bedb-df5e02d090a8",
+    materialUrl: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/BONUS%20-%20VOCABUL%C3%81RIO%20ESPEC%C3%8DFICO.pdf?alt=media&token=da3dbaee-ee71-40ab-8ed5-ffa64523e7ec",
+    status: "j\u00e1 dispon\u00edvel",
+  },
+  {
+    id: 10,
+    title: "bonus apresentar im\u00f3veis e vocabul\u00e1rio no restaurante",
+    file: "bonus apresentar im\u00f3veis e vocabul\u00e1rio no restaurante.mp4",
+    url: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/bonus%20apresentar%20im%C3%B3veis%20e%20vocabul%C3%A1rio%20no%20restaurante.mp4?alt=media&token=df626b86-332a-42ee-ba50-67f42551d859",
+    materialUrl: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/BONUS%20-%20APRESENTAR%20IM%C3%93VEIS%20E%20VOCABUL%C3%81RIO%20NO%20RESTAURANTE.pdf?alt=media&token=1cc47b48-33aa-41cd-8f99-dd2e0efd8694",
+    status: "j\u00e1 dispon\u00edvel",
   },
 ];
 
@@ -152,9 +222,8 @@ export default function Home() {
               <p className="eyebrow">Biblioteca de aulas</p>
               <h2 className="section-title">Acesse os vídeos do seu curso</h2>
               <p className="videos-description">
-                Assim que o pagamento for confirmado, os módulos adquiridos serão
-                exibidos aqui. Você poderá retomar de onde parou e acompanhar o
-                lançamento de novos conteúdos.
+                Assim que o pagamento for confirmado, os modulos adquiridos ja ficam
+                liberados aqui para voce assistir quando quiser.
               </p>
               <div className="videos-actions">
                 <button
@@ -177,8 +246,7 @@ export default function Home() {
                 <li>Acompanhe suas aulas e histórico de progresso por aqui.</li>
               </ol>
               <p className="status-note">
-                Estamos preparando os vídeos. Você receberá um e-mail assim que
-                eles forem publicados.
+                Os videos da biblioteca ja estao disponiveis para assistir.
               </p>
             </div>
           </div>
@@ -188,6 +256,16 @@ export default function Home() {
               <article className="video-card" key={video.id}>
                 <h3>{video.title}</h3>
                 <div className="video-chip">{video.status}</div>
+                {video.materialUrl ? (
+                  <a
+                    className="material-link"
+                    href={video.materialUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Material (PDF)
+                  </a>
+                ) : null}
               </article>
             ))}
           </div>
