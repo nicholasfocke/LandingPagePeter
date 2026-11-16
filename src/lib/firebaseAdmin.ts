@@ -3,10 +3,12 @@ import type { App } from "firebase-admin/app";
 import { cert, getApps, initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { FieldValue, getFirestore } from "firebase-admin/firestore";
+import { getStorage } from "firebase-admin/storage";
 
 type FirebaseAdminInstance = {
   auth: ReturnType<typeof getAuth>;
   db: ReturnType<typeof getFirestore>;
+  storage: ReturnType<typeof getStorage>;
   FieldValue: typeof FieldValue;
 };
 
@@ -52,6 +54,7 @@ export function getFirebaseAdmin() {
   cachedAdmin = {
     auth: getAuth(app),
     db: getFirestore(app),
+    storage: getStorage(app),
     FieldValue,
   };
 

@@ -1,7 +1,10 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import Link from "next/link";
+import { FormEvent, useEffect, useRef, useState } from "react";
+import Icon from "@/components/ui/Icon";
 import { normalizeDigits, validatePurchaseInput } from "@/lib/purchaseValidation";
+import { COURSE } from "@/lib/course/catalog";
 
 type PurchaseModalProps = {
   isOpen: boolean;
@@ -15,8 +18,46 @@ export default function PurchaseModal({ isOpen, onClose }: PurchaseModalProps) {
   const [phone, setPhone] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const firstFieldRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
-  const isDisabled = useMemo(() => isLoading || !isOpen, [isLoading, isOpen]);
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    firstFieldRef.current?.focus();
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && !isLoading) {
+        onClose();
+      }
+      if (event.key === "Tab" && dialogRef.current) {
+        const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), input:not([disabled]), a[href]'
+        );
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first?.focus();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = previousOverflow;
+      previouslyFocused?.focus?.();
+    };
+  }, [isOpen, isLoading, onClose]);
 
   if (!isOpen) {
     return null;
@@ -47,70 +88,165 @@ export default function PurchaseModal({ isOpen, onClose }: PurchaseModalProps) {
 
       if (!response.ok || !payload.url) {
         setError(payload.error ?? "Não foi possível iniciar o checkout.");
+        setIsLoading(false);
         return;
       }
 
       window.location.href = payload.url;
     } catch {
       setError("Não foi possível iniciar o checkout.");
-    } finally {
       setIsLoading(false);
     }
   }
 
+  const isDisabled = isLoading;
+
   return (
-    <div className="checkout-modal-overlay" role="presentation" onClick={onClose}>
-      <div className="checkout-modal" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}>
-        <button type="button" className="checkout-modal-close" onClick={onClose}>
-          ×
+    <div
+      className="dialog-backdrop"
+      role="presentation"
+      onClick={() => {
+        if (!isLoading) {
+          onClose();
+        }
+      }}
+    >
+      <div
+        ref={dialogRef}
+        className="dialog purchase-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="purchase-title"
+        aria-describedby="purchase-description"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <button
+          type="button"
+          className="dialog__close"
+          onClick={onClose}
+          aria-label="Fechar"
+          disabled={isLoading}
+        >
+          <Icon name="close" size={18} />
         </button>
-        <h2>Quero comprar o curso</h2>
-        <p>Preencha seus dados para continuar para o checkout seguro.</p>
 
-        <form className="checkout-modal-form" onSubmit={handleSubmit}>
-          <label htmlFor="purchase-name">Nome completo</label>
-          <input
-            id="purchase-name"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            required
-            disabled={isDisabled}
-          />
+        <p className="eyebrow">{COURSE.eyebrow}</p>
+        <h2 id="purchase-title" className="purchase-dialog__title display">
+          Comprar o curso
+        </h2>
+        <p id="purchase-description" className="purchase-dialog__text">
+          Preencha seus dados para seguir ao pagamento seguro. Após a confirmação, você recebe
+          por e-mail o link para criar sua senha e acessar a área do aluno.
+        </p>
 
-          <label htmlFor="purchase-email">E-mail</label>
-          <input
-            id="purchase-email"
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            required
-            disabled={isDisabled}
-          />
+        <form className="purchase-dialog__form" onSubmit={handleSubmit} noValidate>
+          <div className="field">
+            <label className="field__label" htmlFor="purchase-name">
+              Nome completo
+            </label>
+            <input
+              ref={firstFieldRef}
+              id="purchase-name"
+              className="input"
+              autoComplete="name"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              required
+              disabled={isDisabled}
+            />
+          </div>
 
-          <label htmlFor="purchase-cpf">CPF</label>
-          <input
-            id="purchase-cpf"
-            value={cpf}
-            onChange={(event) => setCpf(normalizeDigits(event.target.value))}
-            maxLength={11}
-            required
-            disabled={isDisabled}
-          />
+          <div className="field">
+            <label className="field__label" htmlFor="purchase-email">
+              E-mail
+            </label>
+            <input
+              id="purchase-email"
+              className="input"
+              type="email"
+              autoComplete="email"
+              inputMode="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              required
+              disabled={isDisabled}
+            />
+            <span className="field__hint">Será o seu login na área do aluno.</span>
+          </div>
 
-          <label htmlFor="purchase-phone">Telefone</label>
-          <input
-            id="purchase-phone"
-            value={phone}
-            onChange={(event) => setPhone(normalizeDigits(event.target.value))}
-            maxLength={11}
-            required
-            disabled={isDisabled}
-          />
+          <div className="purchase-dialog__row">
+            <div className="field">
+              <label className="field__label" htmlFor="purchase-cpf">
+                CPF
+              </label>
+              <input
+                id="purchase-cpf"
+                className="input"
+                inputMode="numeric"
+                placeholder="Somente números"
+                value={cpf}
+                onChange={(event) => setCpf(normalizeDigits(event.target.value))}
+                maxLength={11}
+                required
+                disabled={isDisabled}
+              />
+            </div>
 
-          <button type="submit" className="primary-button" disabled={isDisabled}>
-            {isLoading ? "Redirecionando..." : "Ir para pagamento"}
+            <div className="field">
+              <label className="field__label" htmlFor="purchase-phone">
+                Telefone com DDD
+              </label>
+              <input
+                id="purchase-phone"
+                className="input"
+                type="tel"
+                inputMode="numeric"
+                autoComplete="tel-national"
+                placeholder="Somente números"
+                value={phone}
+                onChange={(event) => setPhone(normalizeDigits(event.target.value))}
+                maxLength={11}
+                required
+                disabled={isDisabled}
+              />
+            </div>
+          </div>
+
+          {error ? (
+            <div className="alert alert--error" role="alert">
+              <Icon name="alert" size={18} />
+              <span>
+                {error}
+                {error.includes("Faça login") ? (
+                  <>
+                    {" "}
+                    <Link href="/login" className="text-link">
+                      Ir para o login
+                    </Link>
+                  </>
+                ) : null}
+              </span>
+            </div>
+          ) : null}
+
+          <button type="submit" className="btn btn--primary btn--lg btn--block" disabled={isDisabled}>
+            {isLoading ? (
+              <>
+                <span className="spinner" aria-hidden="true" />
+                Redirecionando para o pagamento…
+              </>
+            ) : (
+              <>
+                Ir para o pagamento seguro
+                <Icon name="arrowRight" size={18} />
+              </>
+            )}
           </button>
-          {error ? <p className="form-error">{error}</p> : null}
+
+          <p className="purchase-dialog__secure">
+            <Icon name="shield" size={16} />
+            Pagamento processado pela Stripe. Seus dados de cartão não passam pelo HPE.
+          </p>
         </form>
       </div>
     </div>

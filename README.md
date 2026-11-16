@@ -1,4 +1,52 @@
-# Landing Page Peter
+# HPE Brazil — High Performance English
+
+Landing institucional (Business English premium), checkout do curso digital (Stripe)
+e área do aluno (Firebase Auth + Firestore + Storage).
+
+## Estrutura
+
+| Caminho | O que é |
+| --- | --- |
+| `src/app/page.tsx` + `src/components/landing/*` | Landing (server components + ilhas client) |
+| `src/app/login`, `src/app/criar-senha`, `src/components/auth/*` | Autenticação |
+| `src/app/(student)/videos` | Dashboard do aluno |
+| `src/app/(student)/videos/aula/[lessonId]` | Player da aula |
+| `src/app/(student)/perfil` | Perfil |
+| `src/lib/course/catalog.ts` | Catálogo público do curso (**sem URLs de mídia**) |
+| `src/lib/server/courseMedia.ts` | URLs dos vídeos/PDFs (server-only, URLs assinadas) |
+| `src/lib/server/courseAccess.ts` | Regra de direito de acesso ao curso |
+| `src/app/api/course/*` | Perfil + acesso + progresso; mídia da aula |
+| `src/app/api/video-progress` | Progresso/anotações por aula (atualização parcial) |
+
+## Acesso ao curso (validado no servidor)
+
+O aluno só recebe as URLs dos vídeos se `GET /api/course/lessons/:id` confirmar:
+
+1. `users/{uid}` com `purchasedCourse: true` (gravado pelo webhook do Stripe),
+   **ou** `isActive: true` / `courseAccess: true` (liberação manual); **ou**
+2. um documento em `payments` com o mesmo e-mail da conta.
+
+> Alunos cadastrados manualmente sem nenhum desses campos verão "acesso não ativo".
+> Para liberar, adicione `courseAccess: true` em `users/{uid}`.
+> Emergência: `COURSE_ACCESS_ALLOW_ALL_AUTHENTICATED=true` restaura o comportamento
+> antigo (qualquer usuário logado). Use apenas temporariamente.
+
+## Mídia do curso
+
+As URLs são assinadas (v4, 6 h) com a conta de serviço do Firebase Admin. Se a
+assinatura falhar, a API usa a URL legada com token (ainda protegida pela regra de
+acesso) e registra `[course-media]` nos logs.
+
+**Ação recomendada:** as URLs com token estiveram no bundle público até esta versão.
+Depois de confirmar em produção que os vídeos tocam via URL assinada, revogue os
+tokens de download antigos no console do Firebase Storage (cada arquivo › Access
+token › Revoke).
+
+## Progresso
+
+`users/{uid}/video_progress/{lessonId}` com `watchedSeconds`, `durationSeconds`,
+`notes`, `completed`, `completedAt`, `updatedAt`. O player salva a cada 10 s, ao
+pausar, ao terminar, ao trocar de aba e ao sair da página.
 
 ## Ambiente local
 

@@ -1,506 +1,56 @@
-"use client";
+import About from "@/components/landing/About";
+import BusinessSkills from "@/components/landing/BusinessSkills";
+import Clients from "@/components/landing/Clients";
+import Course from "@/components/landing/Course";
+import Faq from "@/components/landing/Faq";
+import FinalCta from "@/components/landing/FinalCta";
+import GetStarted from "@/components/landing/GetStarted";
+import Hero from "@/components/landing/Hero";
+import Method from "@/components/landing/Method";
+import Programs from "@/components/landing/Programs";
+import SiteFooter from "@/components/landing/SiteFooter";
+import SiteHeader from "@/components/landing/SiteHeader";
+import Situations from "@/components/landing/Situations";
+import Testimonials from "@/components/landing/Testimonials";
+import { SITE_DESCRIPTION, SITE_URL } from "@/lib/site";
+import "./landing.css";
 
-import Image from "next/image";
-import Link from "next/link";
-import { useCallback, useState } from "react";
-import type { MouseEvent } from "react";
-import SiteHeader from "@/components/layout/SiteHeader";
-import PurchaseModal from "@/components/checkout/PurchaseModal";
-import "./page.css";
-
-const videoLibrary = [
-  {
-    id: 1,
-    title: "primeiro contato em ingl\u00eas",
-    file: "primeiro contato em ingl\u00eas.mp4",
-    url: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/primeiro%20contato%20em%20ingl%C3%AAs.mp4?alt=media&token=766619f0-f1bf-4682-8e95-e6a23c75a6cf",
-    status: "j\u00e1 dispon\u00edvel",
-  },
-  {
-    id: 2,
-    title: "perguntas inteligentes",
-    file: "perguntas inteligentes.mp4",
-    url: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/perguntas%20inteligentes.mp4?alt=media&token=43c85598-767a-4cb1-967e-780669dd80bc",
-    status: "j\u00e1 dispon\u00edvel",
-  },
-  {
-    id: 3,
-    title: "an\u00e1lise de necessidades",
-    file: "an\u00e1lise de necessidades.mp4",
-    url: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/an%C3%A1lise%20de%20necessidades.mp4?alt=media&token=3e73e0d9-0261-40bb-99b2-7b4bdffd5a81",
-    status: "j\u00e1 dispon\u00edvel",
-  },
-  {
-    id: 4,
-    title: "vocabul\u00e1rio espec\u00edfico",
-    file: "vocabul\u00e1rio espec\u00edfico.mp4",
-    url: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/vocabul%C3%A1rio%20espec%C3%ADfico.mp4?alt=media&token=22e02c47-eb23-4f95-abd0-c2117492483c",
-    status: "j\u00e1 dispon\u00edvel",
-  },
-  {
-    id: 5,
-    title: "apresentar im\u00f3veis e vocabul\u00e1rio no restauranre",
-    file: "apresentar im\u00f3veis e vocabul\u00e1rio no restauranre.mp4",
-    url: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/apresentar%20im%C3%B3veis%20e%20vocabul%C3%A1rio%20no%20restauranre.mp4?alt=media&token=3ac9e9f8-004f-4356-a127-303af09868d3",
-    status: "j\u00e1 dispon\u00edvel",
-  },
-  {
-    id: 6,
-    title: "bonus primeiro contato em ingl\u00eas",
-    file: "bonus primeiro contato em ingl\u00eas.mp4",
-    url: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/bonus%20primeiro%20contato%20em%20ingl%C3%AAs.mp4?alt=media&token=454f3c7e-3375-4bff-a41c-a3288630733f",
-    status: "j\u00e1 dispon\u00edvel",
-  },
-  {
-    id: 7,
-    title: "bonus perguntas inteligentes",
-    file: "bonus perguntas inteligentes.mp4",
-    url: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/bonus%20perguntas%20inteligentes.mp4?alt=media&token=074765d0-08dd-458e-90bc-571396bb4dd8",
-    status: "j\u00e1 dispon\u00edvel",
-  },
-  {
-    id: 8,
-    title: "bonus an\u00e1lise de necessidades",
-    file: "bonus an\u00e1lise de necessidades.mp4",
-    url: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/bonus%20an%C3%A1lise%20de%20necessidades.mp4?alt=media&token=fe5e7ae3-e5e1-473c-8b54-24ea95bac650",
-    status: "j\u00e1 dispon\u00edvel",
-  },
-  {
-    id: 9,
-    title: "bonus vocabul\u00e3rio espec\u00edfico",
-    file: "bonus vocabul\u00e3rio espec\u00edfico.mp4",
-    url: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/bonus%20vocabul%C3%A3rio%20espec%C3%ADfico.mp4?alt=media&token=23e96123-3620-4c28-bedb-df5e02d090a8",
-    status: "j\u00e1 dispon\u00edvel",
-  },
-  {
-    id: 10,
-    title: "bonus apresentar im\u00f3veis e vocabul\u00e1rio no restaurante",
-    file: "bonus apresentar im\u00f3veis e vocabul\u00e1rio no restaurante.mp4",
-    url: "https://firebasestorage.googleapis.com/v0/b/hpebrazil-be671.firebasestorage.app/o/bonus%20apresentar%20im%C3%B3veis%20e%20vocabul%C3%A1rio%20no%20restaurante.mp4?alt=media&token=df626b86-332a-42ee-ba50-67f42551d859",
-    status: "j\u00e1 dispon\u00edvel",
-  },
-];
+const organizationData = {
+  "@context": "https://schema.org",
+  "@type": "EducationalOrganization",
+  name: "HPE Brazil — High Performance English",
+  url: SITE_URL,
+  description: SITE_DESCRIPTION,
+  founder: { "@type": "Person", name: "Peter Focke" },
+  sameAs: ["https://www.instagram.com/peterfocke/"],
+};
 
 export default function Home() {
-  const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
-
-  const handleSmoothScroll = useCallback(
-    (event: MouseEvent<HTMLAnchorElement>, target: string) => {
-      event.preventDefault();
-
-      const element = document.querySelector(target);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "start" });
-        window.history.pushState(null, "", target);
-      }
-    },
-    []
-  );
-
   return (
-    <div className="page">
-      <main className="card">
-        <SiteHeader
-          onSectionClick={handleSmoothScroll}
-          onPurchaseClick={() => setIsPurchaseModalOpen(true)}
-        />
-
-        <section className="hero" id="home">
-          <div className="hero-content">
-            <p className="hero-subtitle">High Performance English</p>
-            <h1 className="hero-title">
-              Inglês de alto desempenho para profissionais de alta performance
-            </h1>
-            <p className="hero-description">
-              Método exclusivo criado por Peter Focke para CEOs, executivos e
-              empreendedores que precisam negociar, apresentar e liderar em
-              inglês sem perder tempo com conteúdos genéricos.
-            </p>
-            <div className="hero-highlights">
-              <div className="hero-highlight">Análise completa das suas necessidades</div>
-              <div className="hero-highlight">Treinamento personalizado e focado em resultados</div>
-              <div className="hero-highlight">Domine apresentações, reuniões e negociações em inglês</div>
-            </div>
-            <div className="hero-actions">
-              <div className="hero-socials">
-                <Link
-                  className="hero-social-button"
-                  href="https://api.whatsapp.com/send/?phone=5582999214182"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Fale com Peter pelo WhatsApp"
-                >
-                  <Image
-                    src="/components/whatsapp.svg"
-                    alt="WhatsApp"
-                    width={28}
-                    height={28}
-                    className="hero-social-icon"
-                  />
-                </Link>
-                <Link
-                  className="hero-social-button"
-                  href="https://www.instagram.com/peterfocke/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Siga Peter no Instagram"
-                >
-                  <Image
-                    src="/components/instagram.svg"
-                    alt="Instagram"
-                    width={28}
-                    height={28}
-                    className="hero-social-icon"
-                  />
-                </Link>
-              </div>
-              <span className="hero-location">Atendendo líderes no Brasil e no exterior</span>
-            </div>
-          </div>
-          <div className="hero-image">
-            <div className="hero-portrait">
-              <Image
-                src="/images/peter.png"
-                alt="Peter Focke"
-                width={560}
-                height={725}
-                priority
-              />
-            </div>
-          </div>
-        </section>
-
-        <section className="section" id="metodo">
-          <div className="section-intro">
-            <h2 className="section-title">O que é o método HPE?</h2>
-            <p className="section-description">
-              HPE – High Performance English é o Rolls Royce do treinamento de
-              inglês para negócios. Cada programa começa com uma análise profunda
-              das demandas do cliente para construir módulos totalmente
-              personalizados, 100% focados nas situações de alto impacto que você
-              vivencia no dia a dia.
-            </p>
-          </div>
-          <div className="feature-grid">
-            <div className="feature-card">
-              <h3>Diagnóstico preciso</h3>
-              <p>
-                Avaliação inicial detalhada para identificar dores, objetivos e
-                momentos críticos da sua rotina profissional.
-              </p>
-            </div>
-            <div className="feature-card">
-              <h3>Conteúdo sob medida</h3>
-              <p>
-                Módulos personalizados que desenvolvem as competências mais
-                importantes para você apresentar, negociar e liderar em inglês.
-              </p>
-            </div>
-            <div className="feature-card">
-              <h3>Resultados acelerados</h3>
-              <p>
-                Treinamento intensivo, focado em desempenho e imediatamente
-                aplicável às suas reuniões, viagens e negociações.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section className="section videos-section" id="catalogo">
-          <div className="videos-hero">
-            <div className="videos-copy">
-              <p className="eyebrow">Biblioteca de aulas</p>
-              <h2 className="section-title">Acesse os vídeos do seu curso</h2>
-              <p className="videos-description">
-                Assim que o pagamento for confirmado, os modulos adquiridos ja ficam
-                liberados aqui para voce assistir quando quiser.
-              </p>
-              <div className="videos-actions">
-                <button
-                  className="secondary-link"
-                  type="button"
-                  onClick={() => setIsPurchaseModalOpen(true)}
-                >
-                  Quero comprar o curso
-                </button>
-                <Link className="text-link" href="/login">
-                  Sou aluno e quero fazer login
-                </Link>
-              </div>
-            </div>
-            <div className="status-card">
-              <h3>Como o acesso funcionará?</h3>
-              <ol>
-                <li>Realize a compra pela landing page com Stripe.</li>
-                <li>Crie sua senha e finalize o login.</li>
-                <li>Acompanhe suas aulas e histórico de progresso por aqui.</li>
-              </ol>
-              <p className="status-note">
-                Os videos da biblioteca ja estao disponiveis para assistir.
-              </p>
-            </div>
-          </div>
-
-          <div className="videos-grid">
-            {videoLibrary.map((video) => (
-              <article className="video-card" key={video.id}>
-                <h3>{video.title}</h3>
-                <div className="video-chip">{video.status}</div>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="split-section">
-          <div className="split-copy">
-            <h2>Por que o HPE é diferente?</h2>
-            <p>
-              Os clientes de Peter permanecem por anos porque percebem progresso
-              imediato e sustentado. Após o treinamento, executivos conseguem
-              apresentar, negociar, participar de reuniões complexas e discutir
-              assuntos estratégicos em inglês com confiança.
-            </p>
-          </div>
-          <ul className="split-list">
-            <li>Anos de experiência treinando líderes em empresas globais.</li>
-            <li>Metodologia exclusiva criada para profissionais de alta performance.</li>
-            <li>Aulas individuais ou em pequenos grupos, presenciais ou online.</li>
-            <li>Foco total em Business English e situações reais do seu mercado.</li>
-          </ul>
-        </section>
-
-        <section className="section" id="clientes">
-          <div className="section-intro">
-            <h2 className="section-title">Quem confia no HPE?</h2>
-            <p className="section-description">
-              CEOs, empreendedores e especialistas de empresas nacionais e
-              multinacionais. Entre os clientes atendidos estão RE/MAX, Nestlé,
-              IBM, EY, GE, Janssen, AstraZeneca, Sanofi, Roche, Trakto, Voltalia,
-              Vivendi, AbbVie e muitos outros.
-            </p>
-          </div>
-          <div className="client-grid">
-            <div className="client-card">
-              <h3>Profissionais atendidos</h3>
-              <p>
-                Executivos C-level, empreendedores, especialistas em TI,
-                engenheiros, marketeiros, advogados, médicos, corretores de
-                imóveis, professores universitários e mais.
-              </p>
-            </div>
-            <div className="client-card">
-              <h3>Presença internacional</h3>
-              <p>
-                Programas ativos em Maceió, São Paulo, Florianópolis, Porto
-                Alegre, Salvador, Campinas, Rio Verde, Lisboa, Hamburgo,
-                Vancouver e Miami.
-              </p>
-            </div>
-            <div className="client-card">
-              <h3>Histórias reais</h3>
-              <p>
-                Peixoto, Eduardo, Paulo, Hugo, Carol e dezenas de líderes elevam
-                suas carreiras ao dominar o inglês corporativo com Peter.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section className="section" id="servicos">
-          <div className="section-intro">
-            <h2 className="section-title">Serviços e experiências exclusivas</h2>
-            <p className="section-description">
-              Escolha o formato ideal para o seu momento. Todos os programas são
-              personalizados, com foco prático e conduzidos pessoalmente por
-              Peter Focke.
-            </p>
-          </div>
-          <div className="services-grid">
-            <article className="service-card">
-              <span className="service-chip">Programa assinatura</span>
-              <h3>Curso completo de Business English</h3>
-              <p>
-                Desenvolvimento contínuo das habilidades essenciais: apresentações,
-                negociação, liderança, reuniões e trabalho em equipe em inglês.
-              </p>
-            </article>
-            <article className="service-card">
-              <span className="service-chip">Pista acelerada</span>
-              <h3>Preparatórios TOEFL &amp; IELTS</h3>
-              <p>
-                Plano de estudo orientado pelos resultados do seu diagnóstico para
-                evoluir rapidamente em reading, writing, listening e speaking.
-              </p>
-            </article>
-            <article className="service-card">
-              <span className="service-chip">Turma imersiva</span>
-              <h3>Imersão em Business English</h3>
-              <p>
-                Quatro encontros intensivos em dois fins de semana (24 horas) para
-                acelerar sua fluência sem sair do país. 
-              </p>
-            </article>
-            <article className="service-card">
-              <span className="service-chip">Mercado global</span>
-              <h3>Vendas de imóveis em inglês</h3>
-              <p>
-                2 módulos para corretores atuarem em transações
-                internacionais: vocabulário técnico, negociação e condução de
-                clientes estrangeiros.
-              </p>
-            </article>
-            <article className="service-card">
-              <span className="service-chip">Workshops táticos</span>
-              <h3>Workshops de Business Skills</h3>
-              <p>
-                Módulos de 4 ou 8 horas em grupos de até 12 participantes focados
-                em apresentação, negociação com estrangeiros e liderança.
-              </p>
-            </article>
-            <article className="service-card">
-              <span className="service-chip">Consultoria VIP</span>
-              <h3>VIP Consultoria</h3>
-              <p>
-                Atendimento premium para empresas e executivos que precisam de um
-                especialista para preparar apresentações, negociações e agendas em
-                inglês.
-              </p>
-            </article>
-          </div>
-        </section>
-
-        <section className="section section-alt">
-          <div className="section-intro">
-            <h2 className="section-title">Como cada programa é estruturado</h2>
-            <p className="section-description">
-              Um processo claro garante que você saiba exatamente o que esperar e
-              como será acompanhado em cada etapa do treinamento.
-            </p>
-          </div>
-          <div className="steps-grid">
-            <div className="step-card">
-              <span className="step-number">01</span>
-              <h3>Análise de necessidades</h3>
-              <p>
-                Identificamos dores, desafios e objetivos do cliente ou da equipe
-                para definir as prioridades do programa.
-              </p>
-            </div>
-            <div className="step-card">
-              <span className="step-number">02</span>
-              <h3>Avaliação de proficiência</h3>
-              <p>
-                Exame detalhado do nível de inglês e das quatro habilidades:
-                reading, writing, listening e speaking.
-              </p>
-            </div>
-            <div className="step-card">
-              <span className="step-number">03</span>
-              <h3>Proposta personalizada</h3>
-              <p>
-                Definição de conteúdos, cronograma, formato das aulas e
-                investimento, com acompanhamento contínuo dos resultados.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section className="bio-section" id="sobre">
-          <div className="bio-copy">
-            <h2>Quem está à frente do HPE?</h2>
-            <p>
-              Peter Focke nasceu em Bremerhaven, Alemanha, é pedagogo pela
-              Universidade de Bremen e certificado pela Universidade de Cambridge
-              e pela Câmara de Comércio e Indústria de Londres. Atuou em diversos
-              países europeus em posições de liderança antes de se estabelecer no
-              Brasil em 1997.
-            </p>
-            <p>
-              Com mais de 30 anos de experiência, já treinou mais de 1300
-              profissionais brasileiros, preparou executivos para TOEFL e IELTS e
-              conduziu workshops e consultorias para empresas como RE/MAX,
-              Nestlé, IBM, EY, GE, Janssen, AstraZeneca, Sanofi, Roche, Trakto e
-              muitas outras.
-            </p>
-            <p>
-              Seu propósito é ajudar líderes a conduzir negócios em inglês com
-              confiança, performance e naturalidade, por meio do método High
-              Performance English.
-            </p>
-          </div>
-          <div className="bio-highlight">
-            <div className="stat-card">
-              <span className="stat-number">+30</span>
-              <span className="stat-label">anos de experiência</span>
-            </div>
-            <div className="stat-card">
-              <span className="stat-number">+1300</span>
-              <span className="stat-label">profissionais treinados</span>
-            </div>
-            <div className="stat-card">
-              <span className="stat-number">+20</span>
-              <span className="stat-label">nacionalidades atendidas</span>
-            </div>
-          </div>
-        </section>
-
-        <section className="section" id="testemunhos">
-          <div className="section-intro">
-            <h2 className="section-title">Testemunhos em vídeo</h2>
-            <p className="section-description">
-              Assista aos depoimentos de clientes que transformaram sua atuação
-              profissional em inglês com o HPE.
-            </p>
-          </div>
-          <div className="testimonial-grid">
-            {[
-              { name: "Eduardo Acioli", file: "Eduardo acioli.mp4" },
-              { name: "Gerard", file: "gerard.mp4" },
-              { name: "Hugo", file: "hugo .mp4" },
-              { name: "João Marcelo Lyra", file: "Joao marcelo lyra.mp4" },
-              { name: "Lucas", file: "Lucas.mp4" },
-              { name: "Paulo Toledo", file: "paulo toledo.mp4" },
-              { name: "Rodrigo Coifman", file: "Rodrigo coifman.mp4" },
-            ].map((testimonial) => (
-              <div className="testimonial-card" key={testimonial.name}>
-                <video
-                  className="testimonial-video"
-                  controls
-                  preload="metadata"
-                  src={`/videos/${encodeURIComponent(testimonial.file)}`}
-                >
-                  Seu navegador não suporta a reprodução de vídeo.
-                </video>
-                <div>
-                  <h3>{testimonial.name}</h3>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="contact-card" id="contato">
-          <div className="contact-text">
-            <h4>Pronto para elevar seu inglês de negócios?</h4>
-            <p>
-              Agende uma conversa para receber uma análise personalizada e um
-              plano sob medida para as suas metas profissionais.
-            </p>
-          </div>
-          <a
-            className="contact-button"
-            href="https://api.whatsapp.com/send/?phone=5582999214182"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Fale com Peter
-          </a>
-        </section>
+    <>
+      <a className="skip-link" href="#conteudo">
+        Pular para o conteúdo
+      </a>
+      <SiteHeader />
+      <main id="conteudo" className="landing">
+        <Hero />
+        <Situations />
+        <Method />
+        <About />
+        <BusinessSkills />
+        <Programs />
+        <Clients />
+        <Testimonials />
+        <Course />
+        <GetStarted />
+        <Faq />
+        <FinalCta />
       </main>
-      <PurchaseModal
-        isOpen={isPurchaseModalOpen}
-        onClose={() => setIsPurchaseModalOpen(false)}
+      <SiteFooter />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationData) }}
       />
-    </div>
+    </>
   );
 }

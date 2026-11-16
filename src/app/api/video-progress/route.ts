@@ -1,121 +1,113 @@
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 import { NextResponse } from "next/server";
 import { getFirebaseAdmin } from "@/lib/firebaseAdmin";
+import { LESSON_IDS } from "@/lib/course/catalog";
+import { getAuthenticatedUser } from "@/lib/server/auth";
+import { readProgress } from "@/lib/server/progress";
 
-function getBearerToken(request: Request) {
-  const authHeader = request.headers.get("authorization") || "";
-  if (!authHeader.startsWith("Bearer ")) {
-    return "";
-  }
-  return authHeader.slice("Bearer ".length).trim();
-}
+const NO_STORE = { "Cache-Control": "private, no-store" };
+const MAX_NOTES_LENGTH = 20_000;
+const MAX_SECONDS = 24 * 60 * 60;
 
-async function getAuthenticatedUserId(request: Request) {
-  const token = getBearerToken(request);
-  if (!token) {
-    return "";
+function clampSeconds(value: unknown) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) {
+    return null;
   }
-
-  try {
-    const { auth } = getFirebaseAdmin();
-    const decodedToken = await auth.verifyIdToken(token);
-    return decodedToken.uid;
-  } catch {
-    return "";
-  }
+  return Math.min(MAX_SECONDS, Math.max(0, number));
 }
 
 export async function GET(request: Request) {
+  const user = await getAuthenticatedUser(request);
+  if (!user) {
+    return NextResponse.json({ error: "Não autenticado." }, { status: 401, headers: NO_STORE });
+  }
+
   try {
-    const uid = await getAuthenticatedUserId(request);
-    if (!uid) {
-      return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
-    }
-
-    const { db } = getFirebaseAdmin();
-    const snapshot = await db
-      .collection("users")
-      .doc(uid)
-      .collection("video_progress")
-      .get();
-
-    const items = snapshot.docs.map((doc) => {
-      const data = doc.data() as {
-        watchedSeconds?: number;
-        watchedMinutes?: number;
-        durationSeconds?: number;
-        notes?: string;
-      };
-
-      const watchedSeconds =
-        typeof data.watchedSeconds === "number"
-          ? data.watchedSeconds
-          : Number(data.watchedMinutes || 0) * 60;
-
-      return {
-        videoId: doc.id,
-        watchedSeconds: Number.isFinite(watchedSeconds) ? watchedSeconds : 0,
-        durationSeconds: Number.isFinite(data.durationSeconds) ? Number(data.durationSeconds) : 0,
-        notes: typeof data.notes === "string" ? data.notes : "",
-      };
-    });
-
-    return NextResponse.json({ ok: true, items });
+    const items = await readProgress(user.uid);
+    return NextResponse.json({ ok: true, items }, { headers: NO_STORE });
   } catch (error) {
     console.error("[video-progress][GET] Falha ao carregar progresso:", error);
-    return NextResponse.json({ error: "Não foi possível carregar o progresso." }, { status: 500 });
+    return NextResponse.json(
+      { error: "Não foi possível carregar o progresso." },
+      { status: 500, headers: NO_STORE }
+    );
   }
 }
 
+/**
+ * Atualização parcial do progresso de uma aula. Apenas os campos enviados são
+ * gravados, para que o salvamento automático do vídeo não sobrescreva anotações
+ * (e vice-versa).
+ */
 export async function POST(request: Request) {
-  try {
-    const uid = await getAuthenticatedUserId(request);
-    if (!uid) {
-      return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
-    }
+  const user = await getAuthenticatedUser(request);
+  if (!user) {
+    return NextResponse.json({ error: "Não autenticado." }, { status: 401, headers: NO_STORE });
+  }
 
-    const body = (await request.json()) as {
+  try {
+    const body = (await request.json().catch(() => ({}))) as {
       videoId?: string;
       watchedSeconds?: number;
-      watchedMinutes?: number;
       durationSeconds?: number;
       notes?: string;
+      completed?: boolean;
     };
 
     const videoId = String(body.videoId || "").trim();
-    if (!videoId) {
-      return NextResponse.json({ error: "videoId é obrigatório." }, { status: 400 });
+    if (!LESSON_IDS.has(videoId)) {
+      return NextResponse.json({ error: "Aula inválida." }, { status: 400, headers: NO_STORE });
     }
 
-    const watchedSeconds = Math.max(0, Number(body.watchedSeconds || 0));
-    const watchedMinutesFromBody = Number(body.watchedMinutes);
-    const watchedMinutes = Number.isFinite(watchedMinutesFromBody)
-      ? watchedMinutesFromBody
-      : Math.round((watchedSeconds / 60) * 100) / 100;
-    const durationSeconds = Math.max(0, Number(body.durationSeconds || 0));
-    const notes = typeof body.notes === "string" ? body.notes : "";
-
     const { db, FieldValue } = getFirebaseAdmin();
+    const update: Record<string, unknown> = { updatedAt: FieldValue.serverTimestamp() };
+
+    if (body.watchedSeconds !== undefined) {
+      const watchedSeconds = clampSeconds(body.watchedSeconds);
+      if (watchedSeconds !== null) {
+        update.watchedSeconds = watchedSeconds;
+        update.watchedMinutes = Math.round((watchedSeconds / 60) * 100) / 100;
+      }
+    }
+
+    if (body.durationSeconds !== undefined) {
+      const durationSeconds = clampSeconds(body.durationSeconds);
+      if (durationSeconds !== null && durationSeconds > 0) {
+        update.durationSeconds = durationSeconds;
+      }
+    }
+
+    if (typeof body.notes === "string") {
+      if (body.notes.length > MAX_NOTES_LENGTH) {
+        return NextResponse.json(
+          { error: "As anotações excedem o limite de caracteres." },
+          { status: 400, headers: NO_STORE }
+        );
+      }
+      update.notes = body.notes;
+    }
+
+    if (typeof body.completed === "boolean") {
+      update.completed = body.completed;
+      update.completedAt = body.completed ? FieldValue.serverTimestamp() : FieldValue.delete();
+    }
+
     await db
       .collection("users")
-      .doc(uid)
+      .doc(user.uid)
       .collection("video_progress")
       .doc(videoId)
-      .set(
-        {
-          watchedSeconds,
-          watchedMinutes,
-          durationSeconds,
-          notes,
-          updatedAt: FieldValue.serverTimestamp(),
-        },
-        { merge: true }
-      );
+      .set(update, { merge: true });
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true }, { headers: NO_STORE });
   } catch (error) {
     console.error("[video-progress][POST] Falha ao salvar progresso:", error);
-    return NextResponse.json({ error: "Não foi possível salvar o progresso." }, { status: 500 });
+    return NextResponse.json(
+      { error: "Não foi possível salvar o progresso." },
+      { status: 500, headers: NO_STORE }
+    );
   }
 }

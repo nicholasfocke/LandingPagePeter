@@ -81,6 +81,15 @@ function getMailerConfig(): MailerConfig {
   );
 }
 
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 type AccessEmailInput = {
   to: string;
   name: string;
@@ -108,7 +117,7 @@ export async function sendPasswordResetEmail({
     html: `
       <div style="font-family: Arial, sans-serif; color: #1f2937; line-height: 1.5;">
         <h2>Redefinição de senha</h2>
-        <p>Olá, ${name}!</p>
+        <p>Olá, ${escapeHtml(name)}!</p>
         <p>Recebemos uma solicitação para alterar sua senha de acesso à área do aluno.</p>
         <p>
           <a href="${resetPasswordUrl}" style="display:inline-block;padding:10px 16px;background:#1f3c88;color:#fff;text-decoration:none;border-radius:8px;">
@@ -136,7 +145,7 @@ export async function sendCourseAccessEmail({
     html: `
       <div style="font-family: Arial, sans-serif; color: #1f2937; line-height: 1.5;">
         <h2>Pagamento confirmado 🎉</h2>
-        <p>Olá, ${name}!</p>
+        <p>Olá, ${escapeHtml(name)}!</p>
         <p>Sua compra foi confirmada com sucesso. Agora, defina sua senha para acessar o curso.</p>
         <p>
           <a href="${setPasswordUrl}" style="display:inline-block;padding:10px 16px;background:#1f3c88;color:#fff;text-decoration:none;border-radius:8px;">
