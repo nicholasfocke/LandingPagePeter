@@ -113,20 +113,44 @@
   cursor: pointer;
 }
 
-.mobile-menu {
+/* Menu mobile: popup flutuante abaixo do header (renderizado no <body>). */
+.mobile-menu-layer {
   position: fixed;
-  inset: 76px 0 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 32px;
-  padding: 24px var(--gutter) max(24px, env(safe-area-inset-bottom));
-  background: var(--ink-950);
-  overflow-y: auto;
+  inset: 0;
+  z-index: 99; /* abaixo do header (100), que continua visível com o botão fechar */
 }
 
-.mobile-menu[hidden] {
+.mobile-menu-layer[hidden] {
   display: none;
+}
+
+.mobile-menu-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 13, 31, 0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: fade-in 240ms var(--ease-out) both;
+}
+
+.mobile-menu {
+  position: absolute;
+  top: 84px;
+  left: 12px;
+  right: 12px;
+  display: grid;
+  gap: 14px;
+  max-width: 440px;
+  margin-left: auto;
+  max-height: calc(100dvh - 96px);
+  padding: 10px 16px 16px;
+  border-radius: 22px;
+  background: var(--ink-900);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.75);
+  overflow: hidden;
+  transform-origin: top right;
+  animation: menu-pop-in 320ms var(--ease-out) both;
 }
 
 .mobile-menu__nav {
@@ -137,23 +161,34 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 0;
+  min-height: 46px;
+  padding: 6px 4px;
   border-bottom: 1px solid var(--line-dark);
   font-family: var(--font-serif);
-  font-size: 30px;
+  font-size: 22px;
   line-height: 1.2;
   color: var(--white);
   text-decoration: none;
-  animation: menu-in 520ms var(--ease-out) both;
+  animation: menu-in 420ms var(--ease-out) both;
+}
+
+.mobile-menu__link:last-child {
+  border-bottom: 0;
 }
 
 .mobile-menu__link svg {
   color: var(--gold-400);
+  transition: transform var(--dur) var(--ease-out);
+}
+
+.mobile-menu__link:hover svg,
+.mobile-menu__link:focus-visible svg {
+  transform: translateX(3px);
 }
 
 .mobile-menu__footer {
   display: grid;
-  gap: 12px;
+  gap: 8px;
 }
 
 .mobile-menu__footer .btn {
@@ -161,10 +196,23 @@
   text-align: center;
 }
 
+@media (min-width: 1181px) {
+  .mobile-menu-layer {
+    display: none;
+  }
+}
+
+@keyframes menu-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.97);
+  }
+}
+
 @keyframes menu-in {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(8px);
   }
 }
 
